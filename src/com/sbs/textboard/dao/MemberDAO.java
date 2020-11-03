@@ -11,12 +11,10 @@ public class MemberDAO {
 
 	private List<MemberDTO> members;
 	private Session session;
-	private int loginCount;
 
 	public MemberDAO() {
 		members = new ArrayList<MemberDTO>();
 		session = Container.session;
-		loginCount = 1;
 
 		// test 계정 생성
 		for (int i = 0; i < 3; i++) {
@@ -32,7 +30,7 @@ public class MemberDAO {
 	public int memberLogin(String id, String pw) {
 
 		if (id.equals("") || pw.equals("")) {
-			return loginCount++;
+			return -1;
 		}
 
 		for (int i = 0; i < members.size(); i++) {
@@ -42,6 +40,6 @@ public class MemberDAO {
 				return 1;
 			}
 		}
-		return loginCount++;
+		return 0;
 	}
 }

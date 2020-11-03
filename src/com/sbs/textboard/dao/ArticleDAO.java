@@ -12,21 +12,21 @@ public class ArticleDAO {
 	public ArticleDAO() {
 		articles = new ArrayList<ArticleDTO>();
 
-		for (int i = 1; i <= 30; i++) {
-			ArticleDTO article = new ArticleDTO();
-			article.id = i;
-			article.title = "ar" + i;
-			article.body = "ar" + i;
-			article.regDate = "ar" + i;
-			article.writer = "ar" + i;
-
-			articles.add(article);
-		}
+		// test code
+//		for (int i = 1; i <= 30; i++) {
+//			ArticleDTO article = new ArticleDTO();
+//			article.id = i;
+//			article.title = "ar" + i;
+//			article.body = "ar" + i;
+//			article.regDate = "ar" + i;
+//			article.writer = "ar" + i;
+//
+//			articles.add(article);
+//		}
 	}
 
 	public int articleAdd(ArticleDTO article) {
 
-		// 필요없을수도
 		for (ArticleDTO newArticle : articles) {
 			if (newArticle.id == article.id) {
 				return -1;
@@ -38,7 +38,7 @@ public class ArticleDAO {
 	}
 
 	public ArticleDTO getArticle(int index) {
-		if (index > articles.size() - 1) {
+		if (index > articles.size() - 1 || index < 0) {
 			return null;
 		}
 		return articles.get(index);

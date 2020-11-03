@@ -33,7 +33,6 @@ public class ArticleController {
 	public void run(Scanner sc, String command) {
 
 		if (command.equals("article add")) {
-
 			if (!session.getIsLogined()) {
 				System.out.println("로그인이 필요합니다.");
 				return;
@@ -53,11 +52,12 @@ public class ArticleController {
 
 			int result = articleService.articleAdd(newArticle);
 
-			if (result != -1) {
-				System.out.printf("%d번 게시물이 등록되었습니다.\n", result);
-				articleId++;
+			if (result == -1) {
+				System.out.println("더미데이터 오류");
 				return;
 			}
+			System.out.printf("%d번 게시물이 등록되었습니다.\n", result);
+			articleId++;
 		} else if (command.startsWith("article list")) {
 			articles = articleService.getArticles();
 
@@ -76,15 +76,13 @@ public class ArticleController {
 				}
 			} else if (command.split(" ").length == 3) {
 				int inputIndex = Integer.parseInt(command.split(" ")[2]);
-
 				int pageInarticle = 10;
-
 				int startArticle = articles.size() - (pageInarticle * (inputIndex - 1));
 
 				for (int i = startArticle; i >= startArticle - pageInarticle + 1; i--) {
-					ArticleDTO article = articleService.getArticle(i - 1);
-
-					if (i >= 0) {
+					if (i > 0) {
+						ArticleDTO article = articleService.getArticle(i - 1);
+						
 						System.out.printf("%d  /  %s  /  %s  /  %s  /  %s \n", article.id, article.writer,
 								article.title, article.body, article.regDate);
 					}
