@@ -79,10 +79,10 @@ public class ArticleController {
 				int pageInarticle = 10;
 				int startArticle = articles.size() - (pageInarticle * (inputIndex - 1));
 
-				for (int i = startArticle; i >= startArticle - pageInarticle + 1; i--) {
-					if (i > 0) {
-						ArticleDTO article = articleService.getArticle(i - 1);
-						
+				for (int i = startArticle - 1; i >= startArticle - pageInarticle + 1; i--) {
+					if (i >= 0) {
+						ArticleDTO article = articleService.getArticle(i);
+
 						System.out.printf("%d  /  %s  /  %s  /  %s  /  %s \n", article.id, article.writer,
 								article.title, article.body, article.regDate);
 					}
