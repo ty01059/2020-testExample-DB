@@ -5,5 +5,5 @@ public class ArticleDTO {
 	public String title;
 	public String body;
 	public String regDate;
-	public String writer;
+	public int writerNum;
 }

@@ -1,7 +1,8 @@
 package com.sbs.textboard.dto;
 
 public class MemberDTO {
-	public String id;
+	public int id;
+	public String memberId;
 	public String pw;
 	public String name;
 }

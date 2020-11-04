@@ -2,7 +2,9 @@ package com.sbs.textboard;
 
 import java.util.Scanner;
 
+import com.sbs.textboard.container.Container;
 import com.sbs.textboard.controller.ArticleController;
+import com.sbs.textboard.controller.Controller;
 import com.sbs.textboard.controller.MemberController;
 
 public class App {
@@ -11,7 +13,7 @@ public class App {
 	ArticleController articleController;
 
 	App() {
-		sc = new Scanner(System.in);
+		sc = Container.scanner;
 		memberController = new MemberController();
 		articleController = new ArticleController();
 
@@ -19,19 +21,27 @@ public class App {
 			System.out.printf("명령어 : ");
 			String command = sc.nextLine();
 
-			if (command.equals("system exit")) {
+			Controller controller = getControllerByCmd(command);
+
+			if (controller != null) {
+				controller.doCommand(command);
+			} else if (command.equals("system exit")) {
 				System.out.println("== 프로그램 종료 ==");
 				break;
-			} else if (command.startsWith("member")) {
-				memberController.run(sc, command);
-			} else if (command.startsWith("article")) {
-				articleController.run(sc, command);
 			} else {
 				System.out.println("등록된 명령어가 아닙니다.");
 				continue;
 			}
 		}
-
 		sc.close();
+	}
+
+	private Controller getControllerByCmd(String command) {
+		if (command.startsWith("member")) {
+			return memberController;
+		} else if (command.startsWith("article")) {
+			return articleController;
+		}
+		return null;
 	}
 }
