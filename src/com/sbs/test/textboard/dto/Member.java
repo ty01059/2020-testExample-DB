@@ -1,6 +1,6 @@
-package com.sbs.textboard.dto;
+package com.sbs.test.textboard.dto;
 
-public class MemberDTO {
+public class Member {
 	public int id;
 	public String memberId;
 	public String pw;

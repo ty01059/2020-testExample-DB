@@ -1,9 +1,9 @@
-package com.sbs.textboard.dto;
+package com.sbs.test.textboard.dto;
 
-public class ArticleDTO {
+public class Article {
 	public int id;
 	public String title;
+	public int writeNum;
 	public String body;
 	public String regDate;
-	public int writerNum;
 }
