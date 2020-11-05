@@ -15,7 +15,7 @@ public class MemberController extends Controller {
 
 	public MemberController() {
 		sc = Container.scanner;
-		memberService = Container.memberService;
+		memberService = new MemberService();
 		count = 1;
 		maxCount = 3;
 	}
