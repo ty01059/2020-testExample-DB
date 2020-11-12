@@ -16,7 +16,7 @@ public class ArticleController extends Controller {
 	private int maxCount;
 
 	public ArticleController() {
-		articleService = new ArticleService();
+		articleService = Container.articleService;
 		sc = Container.scanner;
 
 		count = 1;
@@ -78,8 +78,8 @@ public class ArticleController extends Controller {
 			Article article = articles.get(i);
 			String writer = articleService.getWriter(article.writeNum);
 
-			System.out.printf("%d  /  %s  /  %s  /  %s  /  %s\n", article.id, writer, article.title,
-					article.body, article.regDate);
+			System.out.printf("%d  /  %s  /  %s  /  %s  /  %s\n", article.id, writer, article.title, article.body,
+					article.regDate);
 		}
 	}
 }

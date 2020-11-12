@@ -1,3 +1,4 @@
+## 기본 테스트 내용
 DROP DATABASE IF EXISTS a1;
 
 CREATE DATABASE a1;
@@ -20,4 +21,18 @@ INSERT INTO article
 SET regDate = NOW(),
 title = '제목2', `body` = '내용2';
 
+DESC article;
+
 SELECT * FROM article;
+
+ALTER TABLE article ADD COLUMN updatedate DATETIME;
+
+UPDATE article
+SET updatedate = NOW();
+
+ALTER TABLE article MODIFY COLUMN updatedate DATETIME NOT NULL;
+
+## 내용추가
+UPDATE article
+SET title = '제목4', `body` = '내용3'
+WHERE id = 2;

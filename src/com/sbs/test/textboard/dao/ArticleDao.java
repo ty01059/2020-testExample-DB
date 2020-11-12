@@ -15,15 +15,13 @@ public class ArticleDao {
 
 	private List<Article> articles;
 	private MemberService memberservice;
-	private MemberDao memberDao;
 	private Session session;
 
 	private int articleId;
 
 	public ArticleDao() {
 		articles = new ArrayList<Article>();
-		memberservice = new MemberService();
-		memberDao = new MemberDao();
+		memberservice = Container.memberService;
 		session = Container.session;
 
 		articleId = 0;
@@ -76,7 +74,8 @@ public class ArticleDao {
 
 	public String getWriter(int writeNum) {
 
-		List<Member> members = memberDao.getMembers();
+		List<Member> members = new ArrayList<Member>();
+		memberservice.getMembers();
 
 		for (Member member : members) {
 			if (member.id == writeNum) {

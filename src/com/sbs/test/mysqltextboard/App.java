@@ -19,9 +19,10 @@ public class App {
 			System.out.printf("명령어 : ");
 			String cmd = sc.nextLine();
 
-			if (cmd.equals("article list")) {
-				controller.doCmd();
+			if (cmd.startsWith("article")) {
+				controller.doCmd(cmd);
 			} else if (cmd.equals("system exit")) {
+				System.out.println("== 프로그램 종료 ==");
 				break;
 			} else {
 				continue;
