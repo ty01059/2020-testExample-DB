@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sbs.test.mysqltextboard.Article;
+import com.sbs.test.mysqltextboard.dto.Article;
 
 public class ArticleDao {
 
@@ -32,8 +32,8 @@ public class ArticleDao {
 
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement prstmt = con.prepareStatement(sql);
-			ResultSet rs = prstmt.executeQuery();
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
 				Article article = new Article(rs.getInt("id"), rs.getString("regDate"), rs.getString("title"),

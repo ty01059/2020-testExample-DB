@@ -1,4 +1,4 @@
-package com.sbs.test.mysqltextboard;
+package com.sbs.test.mysqltextboard.dto;
 
 public class Article {
 

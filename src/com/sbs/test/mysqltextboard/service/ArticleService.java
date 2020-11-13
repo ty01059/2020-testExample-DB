@@ -2,14 +2,15 @@ package com.sbs.test.mysqltextboard.service;
 
 import java.util.List;
 
-import com.sbs.test.mysqltextboard.Article;
+import com.sbs.test.mysqltextboard.container.Container;
 import com.sbs.test.mysqltextboard.dao.ArticleDao;
+import com.sbs.test.mysqltextboard.dto.Article;
 
 public class ArticleService {
 	private ArticleDao articleDao;
 
 	public ArticleService() {
-		articleDao = new ArticleDao();
+		articleDao = Container.articleDao;
 	}
 
 	public List<Article> getList() {

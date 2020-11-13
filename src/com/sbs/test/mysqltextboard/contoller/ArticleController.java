@@ -3,17 +3,18 @@ package com.sbs.test.mysqltextboard.contoller;
 import java.util.List;
 import java.util.Scanner;
 
-import com.sbs.test.mysqltextboard.Article;
+import com.sbs.test.mysqltextboard.container.Container;
+import com.sbs.test.mysqltextboard.dto.Article;
 import com.sbs.test.mysqltextboard.service.ArticleService;
 
-public class Controller {
+public class ArticleController extends Controller {
 
 	private ArticleService articleService;
 	private Scanner sc;
 
-	public Controller() {
-		articleService = new ArticleService();
-		sc = new Scanner(System.in);
+	public ArticleController() {
+		articleService = Container.aritlceSerivce;
+		sc = Container.scanner;
 	}
 
 	public void doCmd(String cmd) {
