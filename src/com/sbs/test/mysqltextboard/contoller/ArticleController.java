@@ -82,14 +82,34 @@ public class ArticleController extends Controller {
 	private void articleModify(String cmd) {
 		System.out.println("== 게시물 수정 ==");
 
+		if (!session.getLogined()) {
+			System.out.println("로그인이 필요합니다.");
+			return;
+		}
+
+		if (cmd.split(" ").length != 3) {
+			System.out.println("다시 입력해라");
+			return;
+		}
+
 		int index = Integer.parseInt(cmd.split(" ")[2]);
 
 		System.out.printf("title : ");
 		String title = sc.nextLine();
 		System.out.printf("body : ");
 		String body = sc.nextLine();
+		int memberId = session.getLoginUser().id;
 
-		articleService.modify(index, title, body);
+		Article article = articleService.getArticle(index);
+
+		if (article == null) {
+			System.out.println("없는 게시물입니다.");
+			return;
+		} else if (article.memberId != memberId) {
+			System.out.println("로그인된 사용자에게 권한이 없습니다.");
+			return;
+		}
+		articleService.modify(index, title, body, memberId);
 	}
 
 	private void articleDetail(String cmd) {
@@ -113,6 +133,17 @@ public class ArticleController extends Controller {
 		System.out.println("== 게시물 삭제 ==");
 
 		int index = Integer.parseInt(cmd.split(" ")[2]);
+
+		Article article = articleService.getArticle(index);
+		int memberId = session.getLoginUser().id;
+
+		if (article == null) {
+			System.out.println("없는 게시물입니다.");
+			return;
+		} else if (article.memberId != memberId) {
+			System.out.println("로그인된 사용자에게 권한이 없습니다.");
+			return;
+		}
 
 		articleService.delete(index);
 	}

@@ -75,5 +75,12 @@ public class MemberController extends Controller {
 
 	private void memberLogout() {
 		System.out.println("== 로그아웃 ==");
+		
+		if (!session.getLogined()) {
+			System.out.println("로그인이 필요합니다.");
+			return;
+		}
+		
+		memberService.logout();
 	}
 }

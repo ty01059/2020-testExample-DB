@@ -23,4 +23,8 @@ public class MemberService {
 	public Member login(String id, String pw) {
 		return memberDao.login(id, pw);
 	}
+
+	public void logout() {
+		memberDao.logout();
+	}
 }

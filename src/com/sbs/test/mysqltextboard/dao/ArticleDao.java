@@ -101,13 +101,13 @@ public class ArticleDao {
 		}
 	}
 
-	public void modify(int index, String title, String body) {
+	public void modify(int index, String title, String body, int memberId) {
 
 		String sql = "update article ";
 		sql += "SET title = ?, ";
 		sql += "`body` = ?, ";
 		sql += "updatedate = NOW() ";
-		sql += "where id = " + index;
+		sql += "where id = ? and memberId = ?";
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -116,6 +116,8 @@ public class ArticleDao {
 
 			pstmt.setString(1, title);
 			pstmt.setString(2, body);
+			pstmt.setInt(3, index);
+			pstmt.setInt(4, memberId);
 
 			pstmt.execute();
 
@@ -132,13 +134,14 @@ public class ArticleDao {
 
 	public Article getArticle(int index) {
 		String sql = "select * from article ";
-		sql += "where id = " + index;
+		sql += "where id = ?";
 
 		Article article = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
 			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, index);
 			ResultSet rs = pstmt.executeQuery();
 
 			if (rs.next()) {
@@ -161,12 +164,13 @@ public class ArticleDao {
 	public void delete(int index) {
 
 		String sql = "delete from article ";
-		sql += "where id = " + index;
+		sql += "where id = ?";
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
 			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, index);
 			pstmt.execute();
 
 		} catch (Exception e) {

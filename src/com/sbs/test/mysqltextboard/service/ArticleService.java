@@ -25,8 +25,8 @@ public class ArticleService {
 		articleDao.update(index);
 	}
 
-	public void modify(int index, String title, String body) {
-		articleDao.modify(index, title, body);
+	public void modify(int index, String title, String body, int memberId) {
+		articleDao.modify(index, title, body, memberId);
 	}
 
 	public Article getArticle(int index) {

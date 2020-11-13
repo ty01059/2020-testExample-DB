@@ -114,4 +114,9 @@ public class MemberDao {
 		}
 		return member;
 	}
+
+	public void logout() {
+		session.setLogined(false);
+		session.setLoginUser(null);
+	}
 }
