@@ -36,3 +36,26 @@ ALTER TABLE article MODIFY COLUMN updatedate DATETIME NOT NULL;
 UPDATE article
 SET title = '제목4', `body` = '내용3'
 WHERE id = 2;
+
+## 멤버테이블 추가
+DROP TABLE IF EXISTS `member`;
+
+CREATE TABLE `member` (
+id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
+memberId CHAR(200) NOT NULL,
+`password` CHAR(200) NOT NULL,
+`name` CHAR(200) NOT NULL);
+
+DESC `member`;
+
+SELECT * FROM `member`;
+
+INSERT INTO `member`
+SET memberId = 'aa',
+`password` = 'aa',
+`name` = '멤버1';
+
+INSERT INTO `member`
+SET memberId = 'bb',
+`password` = 'bb',
+`name` = '멤버2';

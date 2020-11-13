@@ -18,7 +18,6 @@ public class App {
 	}
 
 	public void run() {
-
 		while (true) {
 			System.out.printf("명령어 : ");
 			String cmd = sc.nextLine();
