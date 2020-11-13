@@ -15,11 +15,10 @@ public class Container {
 	public static Scanner scanner;
 
 	public static MemberDao memberDao;
-	public static MemberService memberSerivce;
-	public static MemberController memberController;
-
 	public static ArticleDao articleDao;
+	public static MemberService memberSerivce;
 	public static ArticleService aritlceSerivce;
+	public static MemberController memberController;
 	public static ArticleController articleController;
 
 	static {
@@ -27,11 +26,10 @@ public class Container {
 		scanner = new Scanner(System.in);
 
 		memberDao = new MemberDao();
-		memberSerivce = new MemberService();
-		memberController = new MemberController();
-
 		articleDao = new ArticleDao();
+		memberSerivce = new MemberService();
 		aritlceSerivce = new ArticleService();
+		memberController = new MemberController();
 		articleController = new ArticleController();
 	}
 }

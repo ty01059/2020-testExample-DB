@@ -2,6 +2,7 @@ package com.sbs.test.mysqltextboard;
 
 import java.util.Scanner;
 
+import com.sbs.test.mysqltextboard.container.Container;
 import com.sbs.test.mysqltextboard.contoller.ArticleController;
 import com.sbs.test.mysqltextboard.contoller.Controller;
 import com.sbs.test.mysqltextboard.contoller.MemberController;
@@ -12,9 +13,9 @@ public class App {
 	private Scanner sc;
 
 	public App() {
-		articleController = new ArticleController();
-		memberController = new MemberController();
-		sc = new Scanner(System.in);
+		articleController = Container.articleController;
+		memberController = Container.memberController;
+		sc = Container.scanner;
 	}
 
 	public void run() {

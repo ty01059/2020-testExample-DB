@@ -13,12 +13,12 @@ public class ArticleService {
 		articleDao = Container.articleDao;
 	}
 
-	public List<Article> getList() {
-		return articleDao.getList();
+	public List<Article> getArticles() {
+		return articleDao.getArticles();
 	}
 
-	public void add(String title, String body) {
-		articleDao.add(title, body);
+	public void add(String title, String body, int memberId) {
+		articleDao.add(title, body, memberId);
 	}
 
 	public void update(int index) {

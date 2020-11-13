@@ -8,34 +8,41 @@ USE a1;
 CREATE TABLE article (
 id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
 regDate DATETIME NOT NULL,
+updatedate DATETIME NOT NULL,
 title CHAR(200) NOT NULL,
-`body` TEXT NOT NULL);
+`body` TEXT NOT NULL,
+memberId INT UNSIGNED NOT NULL,
+boardId INT UNSIGNED NOT NULL);
 
 DESC article;
 
 INSERT INTO article
 SET regDate = NOW(),
-title = '제목1', `body` = '내용1';
+updatedate = NOW(),
+title = '제목1',
+`body` = '내용1',
+memberId = 1,
+boardId = 1;
 
 INSERT INTO article
 SET regDate = NOW(),
-title = '제목2', `body` = '내용2';
+updatedate = NOW(),
+title = '제목2',
+`body` = '내용2',
+memberId = 2,
+boardId = 2;
+
+INSERT INTO article
+SET regDate = NOW(),
+updatedate = NOW(),
+title = '제목3',
+`body` = '내용3',
+memberId = 2,
+boardId = 2;
 
 DESC article;
 
 SELECT * FROM article;
-
-ALTER TABLE article ADD COLUMN updatedate DATETIME;
-
-UPDATE article
-SET updatedate = NOW();
-
-ALTER TABLE article MODIFY COLUMN updatedate DATETIME NOT NULL;
-
-## 내용추가
-UPDATE article
-SET title = '제목4', `body` = '내용3'
-WHERE id = 2;
 
 ## 멤버테이블 추가
 DROP TABLE IF EXISTS `member`;
