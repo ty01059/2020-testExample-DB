@@ -22,7 +22,7 @@ public class ArticleController extends Controller {
 
 		if (code.equals("list")) {
 			articleList();
-		} else if (code.equals("add")) {
+		} else if (code.equals("write")) {
 			articleAdd();
 		} else if (code.equals("update")) {
 			articleUpdate(cmd);
@@ -82,15 +82,17 @@ public class ArticleController extends Controller {
 		int index = Integer.parseInt(cmd.split(" ")[2]);
 		Article article = articleService.getArticle(index);
 
+		if (article == null) {
+			System.out.println("존재하지 않는 게시물입니다.");
+			return;
+		}
+
 		System.out.printf("id : %d\n", article.id);
 		System.out.printf("작성시간 : %s\n", article.regDate);
 		System.out.printf("제목 : %s\n", article.title);
 		System.out.printf("내용 : %s\n", article.body);
 		System.out.printf("수정시간 : %s\n", article.updatedate);
 
-//		for (Article article : articles) {
-//			System.out.printf("%d  /  %s  /  %s  /  %s\n", article.id, article.regDate, article.title, article.body);
-//		}
 	}
 
 	private void articleDelete(String cmd) {

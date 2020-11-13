@@ -12,17 +12,18 @@ import com.sbs.test.mysqltextboard.dto.Article;
 public class ArticleDao {
 
 	private Connection con;
+	private PreparedStatement pstmt;
 	private List<Article> articles;
 
 	public ArticleDao() {
-		con = null;
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		pstmt = null;
 		articles = new ArrayList<Article>();
 	}
 
@@ -31,8 +32,7 @@ public class ArticleDao {
 		String sql = "select * from article order by id desc";
 
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt = con.prepareStatement(sql);
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
@@ -61,8 +61,7 @@ public class ArticleDao {
 		sql += "updatedate = NOW()";
 
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt = con.prepareStatement(sql);
 
 			pstmt.setString(1, title);
 			pstmt.setString(2, body);
@@ -86,9 +85,8 @@ public class ArticleDao {
 		sql += "where id = " + index;
 
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement prstmt = con.prepareStatement(sql);
-			prstmt.execute();
+			pstmt = con.prepareStatement(sql);
+			pstmt.execute();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -110,8 +108,7 @@ public class ArticleDao {
 		sql += "where id = " + index;
 
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt = con.prepareStatement(sql);
 
 			pstmt.setString(1, title);
 			pstmt.setString(2, body);
@@ -130,19 +127,18 @@ public class ArticleDao {
 	}
 
 	public Article getArticle(int index) {
-		Article article = new Article();
-
 		String sql = "select * from article ";
 		sql += "where id = " + index;
 
+		Article article = null;
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement prstmt = con.prepareStatement(sql);
-			ResultSet rs = prstmt.executeQuery();
+			pstmt = con.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
 
-			rs.next();
-			article = new Article(rs.getInt("id"), rs.getString("regDate"), rs.getString("title"), rs.getString("body"),
-					rs.getString("updatedate"));
+			if (rs.next()) {
+				article = new Article(rs.getInt("id"), rs.getString("regDate"), rs.getString("title"),
+						rs.getString("body"), rs.getString("updatedate"));
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -162,9 +158,8 @@ public class ArticleDao {
 		sql += "where id = " + index;
 
 		try {
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement prstmt = con.prepareStatement(sql);
-			prstmt.execute();
+			pstmt = con.prepareStatement(sql);
+			pstmt.execute();
 
 		} catch (Exception e) {
 			e.printStackTrace();
