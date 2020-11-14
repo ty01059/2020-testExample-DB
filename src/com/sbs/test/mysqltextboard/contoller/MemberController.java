@@ -71,16 +71,28 @@ public class MemberController extends Controller {
 
 	private void memeberInfo() {
 		System.out.println("== 로그인 사용자 정보 ==");
-	}
 
-	private void memberLogout() {
-		System.out.println("== 로그아웃 ==");
-		
 		if (!session.getLogined()) {
 			System.out.println("로그인이 필요합니다.");
 			return;
 		}
-		
+
+		Member member = session.getLoginUser();
+
+		System.out.printf("id : %d\n", member.id);
+		System.out.printf("memberId : %s\n", member.memberId);
+		System.out.printf("pw : %s\n", member.password);
+		System.out.printf("name : %s\n", member.name);
+	}
+
+	private void memberLogout() {
+		System.out.println("== 로그아웃 ==");
+
+		if (!session.getLogined()) {
+			System.out.println("로그인이 필요합니다.");
+			return;
+		}
+
 		memberService.logout();
 	}
 }

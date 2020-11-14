@@ -20,7 +20,6 @@ public class ArticleDao {
 	}
 
 	public List<Article> getArticles() {
-
 		String sql = "select * from article order by id desc";
 
 		try {
@@ -29,6 +28,7 @@ public class ArticleDao {
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			ResultSet rs = pstmt.executeQuery();
 
+			articles = null;
 			while (rs.next()) {
 				Article article = new Article(rs.getInt("id"), rs.getString("regDate"), rs.getString("updatedate"),
 						rs.getString("title"), rs.getString("body"), rs.getInt("memberId"), rs.getInt("boardId"));
@@ -79,16 +79,23 @@ public class ArticleDao {
 		}
 	}
 
-	public void update(int index) {
+	public Article update(int index) {
 		String sql = "update article ";
 		sql += "set updatedate = NOW() ";
-		sql += "where id = " + index;
+		sql += "where id = ?";
+
+		Article article = null;
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
 			PreparedStatement pstmt = con.prepareStatement(sql);
+
+			pstmt.setInt(1, index);
+
 			pstmt.execute();
+
+			article = getArticle(index);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -99,6 +106,7 @@ public class ArticleDao {
 				e.printStackTrace();
 			}
 		}
+		return article;
 	}
 
 	public void modify(int index, String title, String body, int memberId) {

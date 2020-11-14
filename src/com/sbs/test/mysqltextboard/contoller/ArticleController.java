@@ -47,6 +47,11 @@ public class ArticleController extends Controller {
 
 		List<Article> articles = articleService.getArticles();
 
+		if (articles == null) {
+			System.out.println("작성된 게시물이 없습니다.");
+			return;
+		}
+
 		System.out.println("id  /  작성자  /  내용  /  제목  /   작성시간");
 		for (Article article : articles) {
 			Member member = memberService.getMember(article.memberId);
@@ -70,13 +75,21 @@ public class ArticleController extends Controller {
 		int memberId = session.getLoginUser().id;
 
 		articleService.add(title, body, memberId);
+		List<Article> articles = articleService.getArticles();
+		System.out.printf("%d번 게시물이 등록되었습니다.\n", articles.get(0));
 	}
 
 	private void articleUpdate(String cmd) {
 		System.out.println("== 게시물 업데이트 ==");
 
 		int index = Integer.parseInt(cmd.split(" ")[2]);
-		articleService.update(index);
+		Article article = articleService.update(index);
+
+		if (article == null) {
+			System.out.println("작성된 게시물이 없습니다.");
+			return;
+		}
+		System.out.printf("%d번 게시물이 업데이트되었습니다.\n", index);
 	}
 
 	private void articleModify(String cmd) {
@@ -110,6 +123,7 @@ public class ArticleController extends Controller {
 			return;
 		}
 		articleService.modify(index, title, body, memberId);
+		System.out.printf("%d번 게시물이 수정되었습니다.\n", index);
 	}
 
 	private void articleDetail(String cmd) {
@@ -146,5 +160,6 @@ public class ArticleController extends Controller {
 		}
 
 		articleService.delete(index);
+		System.out.printf("%d번 게시물이 삭제되었습니다.\n", index);
 	}
 }
