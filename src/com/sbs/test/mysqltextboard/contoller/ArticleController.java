@@ -1,6 +1,7 @@
 package com.sbs.test.mysqltextboard.contoller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import com.sbs.test.mysqltextboard.container.Container;
@@ -45,7 +46,7 @@ public class ArticleController extends Controller {
 	private void articleList() {
 		System.out.println("== 게시물 리스트 ==");
 
-		List<Article> articles = articleService.getArticles();
+		List<Map<String, Object>> articles = articleService.getArticles();
 
 		if (articles == null) {
 			System.out.println("작성된 게시물이 없습니다.");
@@ -53,10 +54,10 @@ public class ArticleController extends Controller {
 		}
 
 		System.out.println("id  /  작성자  /  내용  /  제목  /   작성시간");
-		for (Article article : articles) {
-			Member member = memberService.getMember(article.memberId);
-			System.out.printf("%d  /  %s  /  %s  /  %s  /  %s\n", article.id, member.memberId, article.title,
-					article.body, article.regDate);
+		for (Map<String, Object> article : articles) {
+			Map<String, Object> member = memberService.getMember((int) article.get("id"));
+			System.out.printf("%d  /  %s  /  %s  /  %s  /  %s\n", article.get("id"), member.get("memberId"),
+					article.get("title"), article.get("body"), article.get("regDate"));
 		}
 	}
 
@@ -74,9 +75,8 @@ public class ArticleController extends Controller {
 		String body = sc.nextLine();
 		int memberId = session.getLoginUser().id;
 
-		articleService.add(title, body, memberId);
-		List<Article> articles = articleService.getArticles();
-		System.out.printf("%d번 게시물이 등록되었습니다.\n", articles.get(0));
+		int id = articleService.add(title, body, memberId);
+		System.out.printf("%d번 게시물이 등록되었습니다.\n", id);
 	}
 
 	private void articleUpdate(String cmd) {

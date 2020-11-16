@@ -1,5 +1,6 @@
 package com.sbs.test.mysqltextboard.contoller;
 
+import java.util.Map;
 import java.util.Scanner;
 
 import com.sbs.test.mysqltextboard.container.Container;
@@ -60,7 +61,7 @@ public class MemberController extends Controller {
 		System.out.printf("Password : ");
 		String pw = sc.nextLine();
 
-		Member member = memberService.login(id, pw);
+		Map<String, Object> member = memberService.login(id, pw);
 		if (member == null) {
 			System.out.println("사용자 정보가 없는 정보입니다.");
 			return;

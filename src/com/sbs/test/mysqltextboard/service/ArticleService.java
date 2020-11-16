@@ -1,6 +1,7 @@
 package com.sbs.test.mysqltextboard.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.sbs.test.mysqltextboard.container.Container;
 import com.sbs.test.mysqltextboard.dao.ArticleDao;
@@ -13,12 +14,12 @@ public class ArticleService {
 		articleDao = Container.articleDao;
 	}
 
-	public List<Article> getArticles() {
+	public List<Map<String, Object>> getArticles() {
 		return articleDao.getArticles();
 	}
 
-	public void add(String title, String body, int memberId) {
-		articleDao.add(title, body, memberId);
+	public int add(String title, String body, int memberId) {
+		return articleDao.add(title, body, memberId);
 	}
 
 	public Article update(int index) {

@@ -6,8 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.sbs.test.mysqltextboard.dto.Article;
+import com.sbs.test.mysqltextboard.mysqlutil.MysqlUtil;
+import com.sbs.test.mysqltextboard.mysqlutil.SecSql;
 
 public class ArticleDao {
 
@@ -19,64 +22,31 @@ public class ArticleDao {
 		articles = new ArrayList<Article>();
 	}
 
-	public List<Article> getArticles() {
-		String sql = "select * from article order by id desc";
+	public List<Map<String, Object>> getArticles() {
 
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			ResultSet rs = pstmt.executeQuery();
+		SecSql sql = new SecSql();
+		sql.append("select *");
+		sql.append("from article");
+		sql.append("order by id desc");
 
-			articles = null;
-			while (rs.next()) {
-				Article article = new Article(rs.getInt("id"), rs.getString("regDate"), rs.getString("updatedate"),
-						rs.getString("title"), rs.getString("body"), rs.getInt("memberId"), rs.getInt("boardId"));
+		List<Map<String, Object>> articles = MysqlUtil.selectRows(sql);
 
-				articles.add(article);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 		return articles;
 	}
 
-	public void add(String title, String body, int memberId) {
-		String sql = "insert into article ";
-		sql += "SET regdate = NOW(), ";
-		sql += "updatedate = NOW(), ";
-		sql += "title = ?, ";
-		sql += "`body` = ?, ";
-		sql += "memberId = ?, ";
-		sql += "boardId = ?";
+	public int add(String title, String body, int memberId) {
 
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement pstmt = con.prepareStatement(sql);
+		SecSql sql = new SecSql();
+		sql.append("insert into article");
+		sql.append("SET regdate = NOW()");
+		sql.append("updatedate = NOW()");
+		sql.append("title = ?", title);
+		sql.append("`body` = ?", body);
+		sql.append("memberId = ?", memberId);
+		sql.append("boardId = ?", memberId);
 
-			pstmt.setString(1, title);
-			pstmt.setString(2, body);
-			pstmt.setInt(3, memberId);
-			pstmt.setInt(4, memberId);
-
-			pstmt.execute();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		int id = MysqlUtil.insert(sql);
+		return id;
 	}
 
 	public Article update(int index) {

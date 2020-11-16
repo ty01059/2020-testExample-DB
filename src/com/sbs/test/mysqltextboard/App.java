@@ -6,6 +6,7 @@ import com.sbs.test.mysqltextboard.container.Container;
 import com.sbs.test.mysqltextboard.contoller.ArticleController;
 import com.sbs.test.mysqltextboard.contoller.Controller;
 import com.sbs.test.mysqltextboard.contoller.MemberController;
+import com.sbs.test.mysqltextboard.mysqlutil.MysqlUtil;
 
 public class App {
 	private ArticleController articleController;
@@ -26,7 +27,13 @@ public class App {
 			Controller controller = getControllerByCmd(cmd);
 
 			if (controller != null) {
+				MysqlUtil.setDBInfo("localhost", "sbsst", "sbs123", "a1");
+
+				MysqlUtil.setDevMode(true);
+
 				controller.doCmd(cmd);
+
+				MysqlUtil.closeConnection();
 			} else if (cmd.equals("system exit")) {
 				System.out.println("== 프로그램 종료 ==");
 				break;
