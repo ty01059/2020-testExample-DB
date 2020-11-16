@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,11 +14,9 @@ import com.sbs.test.mysqltextboard.mysqlutil.SecSql;
 public class ArticleDao {
 
 	private Connection con;
-	private List<Article> articles;
 
 	public ArticleDao() {
 		con = null;
-		articles = new ArrayList<Article>();
 	}
 
 	public List<Map<String, Object>> getArticles() {

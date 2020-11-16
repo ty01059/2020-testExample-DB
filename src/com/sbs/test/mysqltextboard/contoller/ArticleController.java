@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 import com.sbs.test.mysqltextboard.container.Container;
 import com.sbs.test.mysqltextboard.dto.Article;
-import com.sbs.test.mysqltextboard.dto.Member;
 import com.sbs.test.mysqltextboard.service.ArticleService;
 import com.sbs.test.mysqltextboard.service.MemberService;
 import com.sbs.test.mysqltextboard.session.Session;
