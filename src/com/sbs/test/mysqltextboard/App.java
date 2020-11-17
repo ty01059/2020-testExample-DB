@@ -28,7 +28,6 @@ public class App {
 
 			if (controller != null) {
 				MysqlUtil.setDBInfo("localhost", "sbsst", "sbs123", "a1");
-
 				MysqlUtil.setDevMode(true);
 
 				controller.doCmd(cmd);

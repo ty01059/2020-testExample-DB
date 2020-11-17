@@ -40,6 +40,14 @@ title = '제목3',
 memberId = 2,
 boardId = 2;
 
+INSERT INTO article
+SET regDate = NOW(),
+updatedate = NOW(),
+title = '제목4',
+`body` = '내용4',
+memberId = 1,
+boardId = 1;
+
 DESC article;
 
 SELECT * FROM article;
@@ -62,7 +70,23 @@ SET memberId = 'aa',
 `password` = 'aa',
 `name` = '멤버1';
 
-INSERT INTO `member`
+INSERT INTO `member`    
 SET memberId = 'bb',
 `password` = 'bb',
 `name` = '멤버2';
+
+SELECT * FROM article;
+SELECT * FROM `member`;
+
+## 게시판테이블 추가
+DROP TABLE IF EXISTS board;
+
+CREATE TABLE board (
+id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`name` CHAR(200) NOT NULL);
+
+DESC board;
+SELECT * FROM board;
+
+INSERT INTO board
+SET `name` = '공지사항';

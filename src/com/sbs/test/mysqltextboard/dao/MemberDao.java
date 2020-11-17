@@ -17,9 +17,9 @@ public class MemberDao {
 
 	public Map<String, Object> getMember(int id) {
 		SecSql sql = new SecSql();
-		sql.append("select *");
-		sql.append("from member");
-		sql.append("where id = ?", id);
+		sql.append("SELECT `memberId`");
+		sql.append("FROM member");
+		sql.append("WHERE id = ?", id);
 
 		Map<String, Object> member = MysqlUtil.selectRow(sql);
 
@@ -29,22 +29,33 @@ public class MemberDao {
 	public int join(String id, String pw, String name) {
 
 		SecSql sql = new SecSql();
-		sql.append("insert into `member`");
-		sql.append("SET memberId = ?", id);
-		sql.append("`password` = ?", pw);
-		sql.append("`name` = ?", name);
+		sql.append("INSERT INTO `member` (memberId, `password`, `name`)");
+		sql.append("VALUES (?, ?, ?)", id, pw, name);
+
+		SecSql check = new SecSql();
+		check.append("SELECT *");
+		check.append("FROM member");
+		check.append("WHERE memberId = ?", id);
+
+		Map<String, Object> checker = MysqlUtil.selectRow(check);
+
+		if (checker.size() != 0 || !checker.isEmpty()) {
+			return -1;
+		}
 
 		int memberId = MysqlUtil.insert(sql);
+
+		System.out.println(memberId);
 
 		return memberId;
 	}
 
 	public Map<String, Object> login(String id, String pw) {
 		SecSql sql = new SecSql();
-		sql.append("select *");
-		sql.append("from `member`");
-		sql.append("where memberId = ?", id);
-		sql.append("and password = ?", pw);
+		sql.append("SELECT *");
+		sql.append("FROM `member`");
+		sql.append("WHERE memberId = ?", id);
+		sql.append("AND password = ?", pw);
 
 		Map<String, Object> member = MysqlUtil.selectRow(sql);
 
