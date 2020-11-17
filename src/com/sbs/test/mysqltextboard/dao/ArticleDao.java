@@ -1,9 +1,6 @@
 package com.sbs.test.mysqltextboard.dao;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,149 +10,127 @@ import com.sbs.test.mysqltextboard.mysqlutil.SecSql;
 
 public class ArticleDao {
 
-	private Connection con;
+	private List<Article> articles;
 
 	public ArticleDao() {
-		con = null;
+		articles = new ArrayList<>();
 	}
 
-	public List<Map<String, Object>> getArticles() {
+	public List<Article> getArticles() {
 
 		SecSql sql = new SecSql();
-		sql.append("select *");
-		sql.append("from article");
-		sql.append("order by id desc");
+		sql.append("SELECT *");
+		sql.append("FROM article");
+		sql.append("ORDER BY id desc");
 
-		List<Map<String, Object>> articles = MysqlUtil.selectRows(sql);
+		List<Map<String, Object>> maps = MysqlUtil.selectRows(sql);
+
+		for (Map<String, Object> map : maps) {
+			Article article = new Article(map);
+			articles.add(article);
+		}
 
 		return articles;
 	}
 
-	public int add(String title, String body, int memberId) {
+	public int add(String title, String body, int memberId, int boardId) {
 
 		SecSql sql = new SecSql();
-		sql.append("insert into article");
-		sql.append("SET regdate = NOW()");
-		sql.append("updatedate = NOW()");
-		sql.append("title = ?", title);
-		sql.append("`body` = ?", body);
-		sql.append("memberId = ?", memberId);
-		sql.append("boardId = ?", memberId);
+		sql.append("INSERT into article (regdate, updatedate, title, `body`, memberId, boardId)");
+		sql.append("VALUES (NOW(), NOW(), ?, ?, ?, ?)", title, body, memberId, boardId);
 
 		int id = MysqlUtil.insert(sql);
 		return id;
 	}
 
-	public Article update(int index) {
-		String sql = "update article ";
-		sql += "set updatedate = NOW() ";
-		sql += "where id = ?";
+	public int update(int index) {
 
-		Article article = null;
+		SecSql sql = new SecSql();
+		sql.append("UPDATE article");
+		sql.append("SET updatedate = NOW()");
+		sql.append("WHERE id = ?", index);
 
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement pstmt = con.prepareStatement(sql);
+		int result = MysqlUtil.update(sql);
 
-			pstmt.setInt(1, index);
-
-			pstmt.execute();
-
-			article = getArticle(index);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return article;
+		return result;
 	}
 
-	public void modify(int index, String title, String body, int memberId) {
+	public int modify(int index, String title, String body, int memberId) {
 
-		String sql = "update article ";
-		sql += "SET title = ?, ";
-		sql += "`body` = ?, ";
-		sql += "updatedate = NOW() ";
-		sql += "where id = ? and memberId = ?";
+		SecSql sql = new SecSql();
+		sql.append("UPDATE article");
+		sql.append("SET title = ?,", title);
+		sql.append("`body` = ?,", body);
+		sql.append("updatedate = NOW()");
+		sql.append("WHERE id = ? and memberId = ?", index, memberId);
 
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement pstmt = con.prepareStatement(sql);
-
-			pstmt.setString(1, title);
-			pstmt.setString(2, body);
-			pstmt.setInt(3, index);
-			pstmt.setInt(4, memberId);
-
-			pstmt.execute();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		int result = MysqlUtil.update(sql);
+		return result;
 	}
 
-	public Article getArticle(int index) {
-		String sql = "select * from article ";
-		sql += "where id = ?";
+	public Map<String, Object> getArticle(int index) {
 
-		Article article = null;
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, index);
-			ResultSet rs = pstmt.executeQuery();
+		SecSql sql = new SecSql();
+		sql.append("SELECT *");
+		sql.append("FROM article");
+		sql.append("WHERE id = ?", index);
 
-			if (rs.next()) {
-				article = new Article(rs.getInt("id"), rs.getString("regDate"), rs.getString("updatedate"),
-						rs.getString("title"), rs.getString("body"), rs.getInt("memberId"), rs.getInt("boardId"));
-			}
+		Map<String, Object> article = MysqlUtil.selectRow(sql);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 		return article;
 	}
 
 	public void delete(int index) {
+		SecSql sql = new SecSql();
+		sql.append("DELETE from article");
+		sql.append("WHERE id = ?", index);
 
-		String sql = "delete from article ";
-		sql += "where id = ?";
+		MysqlUtil.delete(sql);
+	}
 
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/a1", "sbsst", "sbs123");
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setInt(1, index);
-			pstmt.execute();
+	public int createBoard(String boardName) {
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				con.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		SecSql check = new SecSql();
+		check.append("SELECT name");
+		check.append("FROM board");
+		check.append("WHERE name = ?", boardName);
+
+		Map<String, Object> checker = MysqlUtil.selectRow(check);
+
+		if (checker.size() != 0 || !checker.isEmpty()) {
+			return -1;
 		}
+
+		SecSql sql = new SecSql();
+		sql.append("INSERT INTO board (name)");
+		sql.append("values ( ? )", boardName);
+
+		MysqlUtil.update(sql);
+
+		SecSql getter = new SecSql();
+		getter.append("SELECT id");
+		getter.append("FROM board");
+		getter.append("ORDER BY id desc");
+		getter.append("LIMIT 1");
+
+		int id = MysqlUtil.selectRowIntValue(getter);
+
+		return id;
+	}
+
+	public Map<String, Object> selectBoard(String id) {
+
+		SecSql sql = new SecSql();
+		sql.append("SELECT *");
+		sql.append("FROM board");
+		sql.append("WHERE id = ?", id);
+
+		Map<String, Object> board = MysqlUtil.selectRow(sql);
+
+		if (board.size() == 0 || board.isEmpty()) {
+			return null;
+		}
+
+		return board;
 	}
 }

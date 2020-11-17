@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Scanner;
 
 import com.sbs.test.mysqltextboard.container.Container;
-import com.sbs.test.mysqltextboard.dto.Member;
 import com.sbs.test.mysqltextboard.service.MemberService;
 import com.sbs.test.mysqltextboard.session.Session;
 
@@ -43,9 +42,11 @@ public class MemberController extends Controller {
 		String name = sc.nextLine();
 
 		int result = memberService.join(id, pw, name);
-		if (result == 0) {
-			System.out.printf("%s님 환영합니다.\n", id);
+		if (result == -1) {
+			System.out.println("이미 생성된 아이디입니다.");
+			return;
 		}
+		System.out.printf("%s님 환영합니다.\n", id);
 	}
 
 	private void memberLogin() {
@@ -67,7 +68,8 @@ public class MemberController extends Controller {
 			return;
 		}
 		System.out.printf("%s님 로그인되었습니다.\n", id);
-
+		session.setLogined(true);
+		session.setLoginUser(member);
 	}
 
 	private void memeberInfo() {
@@ -78,12 +80,12 @@ public class MemberController extends Controller {
 			return;
 		}
 
-		Member member = session.getLoginUser();
+		Map<String, Object> member = session.getLoginUser();
 
-		System.out.printf("id : %d\n", member.id);
-		System.out.printf("memberId : %s\n", member.memberId);
-		System.out.printf("pw : %s\n", member.password);
-		System.out.printf("name : %s\n", member.name);
+		System.out.printf("id : %d\n", member.get("id"));
+		System.out.printf("memberId : %s\n", member.get("memberId"));
+		System.out.printf("pw : %s\n", member.get("password"));
+		System.out.printf("name : %s\n", member.get("name"));
 	}
 
 	private void memberLogout() {

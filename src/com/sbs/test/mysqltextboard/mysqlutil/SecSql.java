@@ -22,7 +22,10 @@ public class SecSql {
 	}
 
 	public boolean isInsert() {
-		return getFormat().startsWith("INSERT");
+		if (getFormat().startsWith("INSERT") || getFormat().startsWith("insert")) {
+			return true;
+		}
+		return false;
 	}
 
 	public SecSql append(Object... args) {

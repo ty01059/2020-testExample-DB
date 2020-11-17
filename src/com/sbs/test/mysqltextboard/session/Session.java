@@ -1,10 +1,12 @@
 package com.sbs.test.mysqltextboard.session;
 
-import com.sbs.test.mysqltextboard.dto.Member;
+import java.util.Map;
 
 public class Session {
 	private boolean isLogined;
-	private Member loginUser;
+	private Map<String, Object> loginUser;
+
+	private int selectBoardId;
 
 	public boolean getLogined() {
 		return isLogined;
@@ -14,11 +16,19 @@ public class Session {
 		this.isLogined = isLogined;
 	}
 
-	public Member getLoginUser() {
+	public Map<String, Object> getLoginUser() {
 		return loginUser;
 	}
 
-	public void setLoginUser(Member loginUser) {
+	public void setLoginUser(Map<String, Object> loginUser) {
 		this.loginUser = loginUser;
+	}
+
+	public int getSelectBoardId() {
+		return selectBoardId;
+	}
+
+	public void setSelectBoardId(int id) {
+		this.selectBoardId = id;
 	}
 }

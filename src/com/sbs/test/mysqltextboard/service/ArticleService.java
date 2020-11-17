@@ -14,27 +14,35 @@ public class ArticleService {
 		articleDao = Container.articleDao;
 	}
 
-	public List<Map<String, Object>> getArticles() {
+	public List<Article> getArticles() {
 		return articleDao.getArticles();
 	}
 
-	public int add(String title, String body, int memberId) {
-		return articleDao.add(title, body, memberId);
+	public int add(String title, String body, int memberId, int boardId) {
+		return articleDao.add(title, body, memberId, boardId);
 	}
 
-	public Article update(int index) {
+	public int update(int index) {
 		return articleDao.update(index);
 	}
 
-	public void modify(int index, String title, String body, int memberId) {
-		articleDao.modify(index, title, body, memberId);
+	public int modify(int index, String title, String body, int memberId) {
+		return articleDao.modify(index, title, body, memberId);
 	}
 
-	public Article getArticle(int index) {
+	public Map<String, Object> getArticle(int index) {
 		return articleDao.getArticle(index);
 	}
 
 	public void delete(int index) {
 		articleDao.delete(index);
+	}
+
+	public int createBoard(String boardName) {
+		return articleDao.createBoard(boardName);
+	}
+
+	public Map<String, Object> selectBoard(String id) {
+		return articleDao.selectBoard(id);		
 	}
 }
