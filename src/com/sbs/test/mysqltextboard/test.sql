@@ -90,3 +90,33 @@ SELECT * FROM board;
 
 INSERT INTO board
 SET `name` = '공지사항';
+
+
+## 댓글테이블 생성
+DROP TABLE IF EXISTS articleReply;
+
+CREATE TABLE articleReply (
+id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
+regDate DATETIME NOT NULL,
+`body` TEXT NOT NULL,
+articleId INT UNSIGNED NOT NULL,
+memberId INT UNSIGNED NOT NULL);
+
+DESC articleReply;
+
+INSERT INTO articleReply
+SET regDate = NOW(),
+`body` = 'bodyA',
+articleId = 1,
+memberId = 1;
+
+INSERT INTO articleReply    
+SET regDate = NOW(),
+`body` = 'bodyB',
+articleId = 2,
+memberId = 2;
+
+SELECT * FROM article;
+SELECT * FROM `member`
+SELECT * FROM board;
+SELECT * FROM articleReply;
