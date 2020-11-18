@@ -1,5 +1,7 @@
 package com.sbs.test.mysqltextboard.dto;
 
+import java.util.Map;
+
 public class Member {
 	public int id;
 	public String memberId;
@@ -9,10 +11,10 @@ public class Member {
 	public Member() {
 	}
 
-	public Member(int id, String memberId, String password, String name) {
-		this.id = id;
-		this.memberId = memberId;
-		this.password = password;
-		this.name = name;
+	public Member(Map<String, Object> map) {
+		this.id = (int) map.get("id");
+		this.memberId = (String) map.get("memberId");
+		this.password = (String) map.get("password");
+		this.name = (String) map.get("name");
 	}
 }

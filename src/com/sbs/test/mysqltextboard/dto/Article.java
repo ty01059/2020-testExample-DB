@@ -15,13 +15,13 @@ public class Article {
 	public Article() {
 	}
 
-	public Article(Map<String, Object> maps) {
-		this.id = (int) maps.get("id");
-		this.regDate = (String) maps.get("regDate");
-		this.updatedate = (String) maps.get("updatedate");
-		this.title = (String) maps.get("title");
-		this.body = (String) maps.get("body");
-		this.memberId = (int) maps.get("memberId");
-		this.boardId = (int) maps.get("boardId");
+	public Article(Map<String, Object> map) {
+		this.id = (int) map.get("id");
+		this.regDate = (String) map.get("regDate");
+		this.updatedate = (String) map.get("updatedate");
+		this.title = (String) map.get("title");
+		this.body = (String) map.get("body");
+		this.memberId = (int) map.get("memberId");
+		this.boardId = (int) map.get("boardId");
 	}
 }

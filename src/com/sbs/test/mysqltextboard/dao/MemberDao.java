@@ -3,6 +3,7 @@ package com.sbs.test.mysqltextboard.dao;
 import java.util.Map;
 
 import com.sbs.test.mysqltextboard.container.Container;
+import com.sbs.test.mysqltextboard.dto.Member;
 import com.sbs.test.mysqltextboard.mysqlutil.MysqlUtil;
 import com.sbs.test.mysqltextboard.mysqlutil.SecSql;
 import com.sbs.test.mysqltextboard.session.Session;
@@ -15,13 +16,19 @@ public class MemberDao {
 		session = Container.session;
 	}
 
-	public Map<String, Object> getMember(int id) {
+	public Member getMember(int id) {
 		SecSql sql = new SecSql();
-		sql.append("SELECT `memberId`");
+		sql.append("SELECT *");
 		sql.append("FROM member");
 		sql.append("WHERE id = ?", id);
 
-		Map<String, Object> member = MysqlUtil.selectRow(sql);
+		Map<String, Object> map = MysqlUtil.selectRow(sql);
+
+		Member member = new Member();
+		member.id = (int) map.get("id");
+		member.memberId = (String) map.get("memberId");
+		member.password = (String) map.get("password");
+		member.name = (String) map.get("name");
 
 		return member;
 	}
@@ -50,14 +57,15 @@ public class MemberDao {
 		return memberId;
 	}
 
-	public Map<String, Object> login(String id, String pw) {
+	public Member login(String id, String pw) {
 		SecSql sql = new SecSql();
 		sql.append("SELECT *");
 		sql.append("FROM `member`");
 		sql.append("WHERE memberId = ?", id);
 		sql.append("AND password = ?", pw);
 
-		Map<String, Object> member = MysqlUtil.selectRow(sql);
+		Map<String, Object> map = MysqlUtil.selectRow(sql);
+		Member member = new Member(map);
 
 		return member;
 	}

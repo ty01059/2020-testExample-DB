@@ -1,9 +1,9 @@
 package com.sbs.test.mysqltextboard.contoller;
 
-import java.util.Map;
 import java.util.Scanner;
 
 import com.sbs.test.mysqltextboard.container.Container;
+import com.sbs.test.mysqltextboard.dto.Member;
 import com.sbs.test.mysqltextboard.service.MemberService;
 import com.sbs.test.mysqltextboard.session.Session;
 
@@ -62,7 +62,7 @@ public class MemberController extends Controller {
 		System.out.printf("Password : ");
 		String pw = sc.nextLine();
 
-		Map<String, Object> member = memberService.login(id, pw);
+		Member member = memberService.login(id, pw);
 		if (member == null) {
 			System.out.println("사용자 정보가 없는 정보입니다.");
 			return;
@@ -80,12 +80,12 @@ public class MemberController extends Controller {
 			return;
 		}
 
-		Map<String, Object> member = session.getLoginUser();
+		Member member = session.getLoginUser();
 
-		System.out.printf("id : %d\n", member.get("id"));
-		System.out.printf("memberId : %s\n", member.get("memberId"));
-		System.out.printf("pw : %s\n", member.get("password"));
-		System.out.printf("name : %s\n", member.get("name"));
+		System.out.printf("id : %d\n", member.id);
+		System.out.printf("memberId : %s\n", member.memberId);
+		System.out.printf("pw : %s\n", member.password);
+		System.out.printf("name : %s\n", member.name);
 	}
 
 	private void memberLogout() {

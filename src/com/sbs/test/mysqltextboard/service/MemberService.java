@@ -1,9 +1,8 @@
 package com.sbs.test.mysqltextboard.service;
 
-import java.util.Map;
-
 import com.sbs.test.mysqltextboard.container.Container;
 import com.sbs.test.mysqltextboard.dao.MemberDao;
+import com.sbs.test.mysqltextboard.dto.Member;
 
 public class MemberService {
 
@@ -13,7 +12,7 @@ public class MemberService {
 		memberDao = Container.memberDao;
 	}
 
-	public Map<String, Object> getMember(int id) {
+	public Member getMember(int id) {
 		return memberDao.getMember(id);
 	}
 
@@ -21,7 +20,7 @@ public class MemberService {
 		return memberDao.join(id, pw, name);
 	}
 
-	public Map<String, Object> login(String id, String pw) {
+	public Member login(String id, String pw) {
 		return memberDao.login(id, pw);
 	}
 
