@@ -16,23 +16,6 @@ public class MemberDao {
 		session = Container.session;
 	}
 
-	public Member getMember(int id) {
-		SecSql sql = new SecSql();
-		sql.append("SELECT *");
-		sql.append("FROM member");
-		sql.append("WHERE id = ?", id);
-
-		Map<String, Object> map = MysqlUtil.selectRow(sql);
-
-		Member member = new Member();
-		member.id = (int) map.get("id");
-		member.memberId = (String) map.get("memberId");
-		member.password = (String) map.get("password");
-		member.name = (String) map.get("name");
-
-		return member;
-	}
-
 	public int join(String id, String pw, String name) {
 
 		SecSql sql = new SecSql();

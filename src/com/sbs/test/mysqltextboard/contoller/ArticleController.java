@@ -5,23 +5,19 @@ import java.util.*;
 import com.sbs.test.mysqltextboard.container.Container;
 import com.sbs.test.mysqltextboard.dto.Article;
 import com.sbs.test.mysqltextboard.dto.Board;
-import com.sbs.test.mysqltextboard.dto.Member;
 import com.sbs.test.mysqltextboard.dto.Reply;
 import com.sbs.test.mysqltextboard.service.ArticleService;
-import com.sbs.test.mysqltextboard.service.MemberService;
 import com.sbs.test.mysqltextboard.session.Session;
 
 public class ArticleController extends Controller {
 
 	private ArticleService articleService;
-	private MemberService memberService;
 	private Scanner sc;
 	private Session session;
 	private Board board;
 
 	public ArticleController() {
 		articleService = Container.aritlceSerivce;
-		memberService = Container.memberSerivce;
 		sc = Container.scanner;
 		session = Container.session;
 
