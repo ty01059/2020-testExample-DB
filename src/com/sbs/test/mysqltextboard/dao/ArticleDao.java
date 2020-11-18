@@ -12,17 +12,16 @@ import com.sbs.test.mysqltextboard.mysqlutil.SecSql;
 
 public class ArticleDao {
 
-	private List<Article> articles;
-
 	public ArticleDao() {
-		articles = new ArrayList<>();
 	}
 
 	public List<Article> getArticles() {
-
+		List<Article> articles = new ArrayList<>();
 		SecSql sql = new SecSql();
-		sql.append("SELECT *");
+		sql.append("SELECT article.*, member.memberId AS writer");
 		sql.append("FROM article");
+		sql.append("INNER JOIN member");
+		sql.append("ON article.memberId = member.id");
 		sql.append("ORDER BY id desc");
 
 		List<Map<String, Object>> maps = MysqlUtil.selectRows(sql);
@@ -36,10 +35,12 @@ public class ArticleDao {
 	}
 
 	public List<Article> getArticles(int boardId) {
-
+		List<Article> articles = new ArrayList<>();
 		SecSql sql = new SecSql();
-		sql.append("SELECT *");
+		sql.append("SELECT article.*, member.memberId AS writer");
 		sql.append("FROM article");
+		sql.append("INNER JOIN member");
+		sql.append("ON article.memberId = member.id");
 		sql.append("WHERE boardId = ?", boardId);
 		sql.append("ORDER BY id desc");
 
@@ -51,6 +52,22 @@ public class ArticleDao {
 		}
 
 		return articles;
+	}
+
+	public Article getArticle(int index) {
+
+		SecSql sql = new SecSql();
+		sql.append("SELECT article.*, member.memberId AS writer");
+		sql.append("FROM article");
+		sql.append("INNER JOIN member");
+		sql.append("ON article.memberId = member.id");
+		sql.append("WHERE article.id = ?", index);
+
+		Map<String, Object> map = MysqlUtil.selectRow(sql);
+
+		Article article = new Article(map);
+
+		return article;
 	}
 
 	public int add(String title, String body, int memberId, int boardId) {
@@ -86,20 +103,6 @@ public class ArticleDao {
 
 		int result = MysqlUtil.update(sql);
 		return result;
-	}
-
-	public Article getArticle(int index) {
-
-		SecSql sql = new SecSql();
-		sql.append("SELECT *");
-		sql.append("FROM article");
-		sql.append("WHERE id = ?", index);
-
-		Map<String, Object> map = MysqlUtil.selectRow(sql);
-
-		Article article = new Article(map);
-
-		return article;
 	}
 
 	public int delete(int index) {

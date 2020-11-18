@@ -62,30 +62,21 @@ public class ArticleController extends Controller {
 
 		System.out.println("id  /  작성자  /  내용  /  제목  /   작성시간  /  수정시간  /  boardId");
 
+		List<Article> articles = new ArrayList<>();
 		if (session.getSelectBoardId() == 0) {
-			List<Article> articles = articleService.getArticles();
-
-			if (articles == null) {
-				System.out.println("작성된 게시물이 없습니다.");
-				return;
-			}
-			for (Article article : articles) {
-				Member member = memberService.getMember(article.memberId);
-				System.out.printf("%d  /  %s  /  %s  /  %s  /  %s  /  %s  /  %d\n", article.id, member.memberId,
-						article.title, article.body, article.regDate, article.updatedate, article.boardId);
-			}
+			articles = articleService.getArticles();
 		} else {
-			List<Article> articles = articleService.getArticles(board.id);
+			articles = articleService.getArticles(board.id);
+		}
+		
+		if (articles == null) {
+			System.out.println("작성된 게시물이 없습니다.");
+			return;
+		}
 
-			if (articles == null) {
-				System.out.println("작성된 게시물이 없습니다.");
-				return;
-			}
-			for (Article article : articles) {
-				Member member = memberService.getMember(article.memberId);
-				System.out.printf("%d  /  %s  /  %s  /  %s  /  %s  /  %s  /  %d\n", article.id, member.memberId,
-						article.title, article.body, article.regDate, article.updatedate, article.boardId);
-			}
+		for (Article article : articles) {
+			System.out.printf("%d  /  %s  /  %s  /  %s  /  %s  /  %s  /  %d\n", article.id, article.writer,
+					article.title, article.body, article.regDate, article.updatedate, article.boardId);
 		}
 	}
 
@@ -165,12 +156,10 @@ public class ArticleController extends Controller {
 			System.out.println("존재하지 않는 게시물입니다.");
 			return;
 		}
-		Member member = new Member();
 		System.out.printf("id : %d\n", article.id);
 		System.out.printf("작성시간 : %s\n", article.regDate);
 		System.out.printf("수정시간 : %s\n", article.updatedate);
-		member = memberService.getMember(article.memberId);
-		System.out.printf("작성자 : %s\n", member.memberId);
+		System.out.printf("작성자 : %s\n", article.writer);
 		System.out.printf("제목 : %s\n", article.title);
 		System.out.printf("내용 : %s\n", article.body);
 
@@ -178,8 +167,7 @@ public class ArticleController extends Controller {
 		List<Reply> reply = articleService.getReply((int) article.id);
 		System.out.println("id  /  작성자  /  작성시간  /  내용");
 		for (Reply r : reply) {
-			member = memberService.getMember(r.memberId);
-			System.out.printf("%d  /  %s  /  %s  /  %s\n", r.id, member.memberId, r.regDate, r.body);
+			System.out.printf("%d  /  %s  /  %s  /  %s\n", r.id, article.writer, r.regDate, r.body);
 		}
 	}
 
@@ -222,6 +210,7 @@ public class ArticleController extends Controller {
 
 		if (id == 0) {
 			session.setSelectBoardId(0);
+			System.out.println("게시판 홈으로 이동");
 			return;
 		}
 		board = articleService.selectBoard(id);

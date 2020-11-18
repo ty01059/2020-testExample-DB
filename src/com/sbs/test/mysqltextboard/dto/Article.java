@@ -12,6 +12,8 @@ public class Article {
 	public int memberId;
 	public int boardId;
 
+	public String writer;
+
 	public Article() {
 	}
 
@@ -23,5 +25,6 @@ public class Article {
 		this.body = (String) map.get("body");
 		this.memberId = (int) map.get("memberId");
 		this.boardId = (int) map.get("boardId");
+		this.writer = (String) map.get("writer");
 	}
 }
