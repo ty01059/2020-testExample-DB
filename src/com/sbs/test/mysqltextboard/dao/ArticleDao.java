@@ -187,4 +187,16 @@ public class ArticleDao {
 		}
 		return replys;
 	}
+
+	public int modifyReply(int id, String body, int memberId) {
+
+		SecSql sql = new SecSql();
+		sql.append("INSERT INTO articleReply ( body )");
+		sql.append("VALUES ( ? )", body);
+		sql.append("WHERE id = ? AND memberId = ?", id, memberId);
+
+		int index = MysqlUtil.insert(sql);
+
+		return index;
+	}
 }

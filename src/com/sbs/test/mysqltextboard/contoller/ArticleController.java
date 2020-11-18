@@ -46,7 +46,7 @@ public class ArticleController extends Controller {
 		} else if (code.equals("writeReply")) {
 			articleReply(cmd);
 		} else if (code.equals("modifyReply")) {
-
+			articleModifyReply(cmd);
 		} else if (code.equals("deleteReply")) {
 
 		}
@@ -64,7 +64,7 @@ public class ArticleController extends Controller {
 		} else {
 			articles = articleService.getArticles(board.id);
 		}
-		
+
 		if (articles == null) {
 			System.out.println("작성된 게시물이 없습니다.");
 			return;
@@ -216,14 +216,17 @@ public class ArticleController extends Controller {
 	}
 
 	private void articleReply(String cmd) {
+		if (cmd.split(" ").length != 3) {
+			return;
+		}
 		int id = Integer.parseInt(cmd.split(" ")[2]);
+
+		System.out.println("== 댓글 작성 ==");
 
 		if (!session.getLogined()) {
 			System.out.println("로그인이 필요합니다.");
 			return;
 		}
-
-		System.out.println("== 댓글 작성 ==");
 
 		System.out.printf("내용 : ");
 		String body = sc.nextLine();
@@ -231,5 +234,29 @@ public class ArticleController extends Controller {
 		int result = articleService.writeReply(body, id, session.getLoginUser().id);
 
 		System.out.printf("%d번글에 %d번 댓글이 추가되었습니다.\n", id, result);
+	}
+
+	private void articleModifyReply(String cmd) {
+		if (cmd.split(" ").length != 3) {
+			return;
+		}
+
+		int id = Integer.parseInt(cmd.split(" ")[2]);
+
+		if (!session.getLogined()) {
+			System.out.println("로그인이 필요합니다.");
+			return;
+		}
+
+		System.out.println("== 댓글 수정 ==");
+
+		System.out.printf("내용 : ");
+		String body = sc.nextLine();
+
+		int index = articleService.modifyReply(id, body, session.getLoginUser().id);
+		if (index == -1) {
+			System.out.println("권한이 없습니다.");
+			return;
+		}
 	}
 }
