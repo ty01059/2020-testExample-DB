@@ -15,6 +15,7 @@ public class ArticleService {
 		articleDao = Container.articleDao;
 	}
 
+	// ############ 게시물 #################
 	public List<Article> getArticles() {
 		return articleDao.getArticles();
 	}
@@ -43,14 +44,28 @@ public class ArticleService {
 		return articleDao.delete(index);
 	}
 
-	public int createBoard(String boardName) {
-		return articleDao.createBoard(boardName);
+	// ############ 게시판 #################
+	public int createBoard(String boardName, String code) {
+		return articleDao.createBoard(boardName, code);
 	}
 
-	public Board selectBoard(int id) {
-		return articleDao.selectBoard(id);
+	public Board selectBoard(String code) {
+		return articleDao.selectBoard(code);
 	}
 
+	public boolean getBoardNameCheck(String boardName) {
+		return articleDao.getBoardNameCheck(boardName);
+	}
+
+	public boolean getBoardCodeCheck(String code) {
+		return articleDao.getBoardCodeCheck(code);
+	}
+
+	public List<Board> getBoards() {
+		return articleDao.getBoards();
+	}
+
+	// ############ 댓글 #################
 	public int writeReply(String body, int articleId, int memberId) {
 		return articleDao.writeReply(body, articleId, memberId);
 	}

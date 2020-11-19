@@ -117,6 +117,15 @@ articleId = 2,
 memberId = 2;
 
 SELECT * FROM article;
-SELECT * FROM `member`
+SELECT * FROM `member`;
 SELECT * FROM board;
 SELECT * FROM articleReply;
+
+ALTER TABLE board ADD COLUMN `code` CHAR(100) NOT NULL;
+
+UPDATE board
+SET `code` = "notice";
+
+INSERT INTO board
+SET `name` = '자유',
+`code` = 'free';

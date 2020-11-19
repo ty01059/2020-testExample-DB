@@ -20,7 +20,7 @@ public class ArticleController extends Controller {
 		articleService = Container.aritlceSerivce;
 		sc = Container.scanner;
 		session = Container.session;
-
+		session.setSelectBoardId(1);
 		board = new Board();
 	}
 
@@ -42,7 +42,7 @@ public class ArticleController extends Controller {
 		} else if (code.equals("createBoard")) {
 			articleCreateBoard();
 		} else if (code.equals("selectBoard")) {
-			articleSelectBoard(cmd);
+			articleSelectBoard();
 		} else if (code.equals("writeReply")) {
 			articleReply(cmd);
 		} else if (code.equals("modifyReply")) {
@@ -197,23 +197,46 @@ public class ArticleController extends Controller {
 		System.out.printf("boardName : ");
 		String boardName = sc.nextLine();
 
-		int id = articleService.createBoard(boardName);
+		if (articleService.getBoardNameCheck(boardName)) {
+			System.out.println("게시판 이름이 이미 존재합니다.");
+			return;
+		}
+
+		System.out.printf("code : ");
+		String code = sc.nextLine();
+
+		if (articleService.getBoardCodeCheck(code)) {
+			System.out.println("게시판 코드가 이미 존재합니다.");
+			return;
+		}
+
+		int id = articleService.createBoard(boardName, code);
 		if (id == -1) {
 			System.out.printf("%s 게시판이름이 이미 생성되어있습니다.\n", boardName);
 		}
 		System.out.printf("%s(%d번) 게시판이 생성되었습니다.\n", boardName, id);
 	}
 
-	private void articleSelectBoard(String cmd) {
-		int id = Integer.parseInt(cmd.split(" ")[2]);
+	private void articleSelectBoard() {
 		System.out.println("== 게시판 선택 ==");
 
-		if (id == 0) {
-			session.setSelectBoardId(0);
-			System.out.println("게시판 홈으로 이동");
+		System.out.println("= 게시판 목록 =");
+		List<Board> boards = articleService.getBoards();
+
+		System.out.println("번호  /  이름  /  코드");
+		for (Board board : boards) {
+			System.out.printf("%d  /  %s  /  %s\n", board.id, board.name, board.code);
+		}
+
+		System.out.printf("code : ");
+		String code = sc.nextLine();
+
+		if (!articleService.getBoardCodeCheck(code)) {
+			System.out.println("존재하지않는 게시판입니다.");
 			return;
 		}
-		board = articleService.selectBoard(id);
+
+		board = articleService.selectBoard(code);
 		session.setSelectBoardId(board.id);
 
 		System.out.printf("%s(%d번) 게시판이 선택되었습니다.\n", board.name, board.id);

@@ -1,107 +1,131 @@
-# a5 데이터베이스 삭제/생성/선택
-DROP DATABASE IF EXISTS a5;
-CREATE DATABASE a5;
-USE a5;
+## 기본 테스트 내용
+DROP DATABASE IF EXISTS a1;
 
-# 부서(dept) 테이블 생성 및 홍보부서 기획부서 추가
-CREATE TABLE dept (
+CREATE DATABASE a1;
+
+USE a1;
+
+CREATE TABLE article (
 id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
-department CHAR(50) NOT NULL
-);
+regDate DATETIME NOT NULL,
+updatedate DATETIME NOT NULL,
+title CHAR(200) NOT NULL,
+`body` TEXT NOT NULL,
+memberId INT UNSIGNED NOT NULL,
+boardId INT UNSIGNED NOT NULL);
 
-INSERT INTO dept
-SET department = "홍보";
+DESC article;
 
-INSERT INTO dept
-SET department = "기획";
+INSERT INTO article
+SET regDate = NOW(),
+updatedate = NOW(),
+title = '제목1',
+`body` = '내용1',
+memberId = 1,
+boardId = 1;
 
-SELECT * FROM dept;
+INSERT INTO article
+SET regDate = NOW(),
+updatedate = NOW(),
+title = '제목2',
+`body` = '내용2',
+memberId = 2,
+boardId = 2;
 
-# 사원(emp) 테이블 생성 및 홍길동사원(홍보부서), 홍길순사원(홍보부서), 임꺽정사원(기획부서) 추가
-CREATE TABLE emp (
+INSERT INTO article
+SET regDate = NOW(),
+updatedate = NOW(),
+title = '제목3',
+`body` = '내용3',
+memberId = 2,
+boardId = 2;
+
+INSERT INTO article
+SET regDate = NOW(),
+updatedate = NOW(),
+title = '제목4',
+`body` = '내용4',
+memberId = 1,
+boardId = 1;
+
+DESC article;
+
+SELECT * FROM article;
+
+## 멤버테이블 추가
+DROP TABLE IF EXISTS `member`;
+
+CREATE TABLE `member` (
 id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
-`name` CHAR(50) NOT NULL,
-department CHAR(50) NOT NULL
-);
+memberId CHAR(200) NOT NULL,
+`password` CHAR(200) NOT NULL,
+`name` CHAR(200) NOT NULL);
 
-ALTER TABLE emp ADD COLUMN `position` CHAR(50) NOT NULL;
-ALTER TABLE emp MODIFY COLUMN `position` CHAR(50) NOT NULL AFTER `name`;
+DESC `member`;
 
-INSERT INTO emp
-SET `name` = "홍길동",
-`position` = "사원",
-department = "홍보";
+SELECT * FROM `member`;
 
-INSERT INTO emp
-SET `name` = "홍길순",
-`position` = "사원",
-department = "홍보";
+INSERT INTO `member`
+SET memberId = 'aa',
+`password` = 'aa',
+`name` = '멤버1';
 
-INSERT INTO emp
-SET `name` = "임꺽정",
-`position` = "사원",
-department = "기획";
+INSERT INTO `member`    
+SET memberId = 'bb',
+`password` = 'bb',
+`name` = '멤버2';
 
-SELECT * FROM emp;
+SELECT * FROM article;
+SELECT * FROM `member`;
 
-# 홍보를 마케팅으로 변경
-UPDATE dept
-SET department = "마케팅"
-WHERE department = "홍보";
+## 게시판테이블 추가
+DROP TABLE IF EXISTS board;
 
-# 마케팅을 홍보로 변경
-UPDATE dept
-SET department = "홍보"
-WHERE department = "마케팅";
+CREATE TABLE board (
+id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`name` CHAR(200) NOT NULL);
 
-# 홍보를 마케팅으로 변경
-UPDATE dept
-SET department = "마케팅"
-WHERE department = "홍보";
-# 구조를 변경하기로 결정(사원 테이블에서, 이제는 부서를 이름이 아닌 번호로 기억)
-UPDATE emp
-SET department = "1"
-WHERE department = "홍보";
+DESC board;
+SELECT * FROM board;
 
-UPDATE emp
-SET department = "2"
-WHERE department = "기획";
+INSERT INTO board
+SET `name` = '공지사항';
 
-# 사장님께 드릴 인명록을 생성
-SELECT * FROM emp;
 
-# 사장님께서 부서번호가 아니라 부서명을 알고 싶어하신다.
-# 그래서 dept 테이블 조회법을 알려드리고 혼이 났다.
+## 댓글테이블 생성
+DROP TABLE IF EXISTS articleReply;
 
-# 사장님께 드릴 인명록을 생성(v2, 부서명 포함, ON 없이)
-UPDATE emp
-SET department = "홍보"
-WHERE department = "1";
+CREATE TABLE articleReply (
+id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
+regDate DATETIME NOT NULL,
+`body` TEXT NOT NULL,
+articleId INT UNSIGNED NOT NULL,
+memberId INT UNSIGNED NOT NULL);
 
-UPDATE emp
-SET department = "기획"
-WHERE department = "2";
+DESC articleReply;
 
-ALTER TABLE emp ADD COLUMN deptId INT UNSIGNED NOT NULL;
+INSERT INTO articleReply
+SET regDate = NOW(),
+`body` = 'bodyA',
+articleId = 1,
+memberId = 1;
 
-UPDATE emp
-SET deptId = 1
-WHERE department = "홍보";
-UPDATE emp
-SET deptId = 2
-WHERE department = "기획";
+INSERT INTO articleReply    
+SET regDate = NOW(),
+`body` = 'bodyB',
+articleId = 2,
+memberId = 2;
 
-SELECT * FROM emp;
+SELECT * FROM article;
+SELECT * FROM `member`
+SELECT * FROM board;
+SELECT * FROM articleReply;
 
-# 이상한 데이터가 생성되어서 혼남
+ALTER TABLE board ADD COLUMN `code` CHAR(100) NOT NULL;
 
-# 사장님께 드릴 인명록을 생성(v3, 부서명 포함, 올바른 조인 룰(ON) 적용)
-# 보고용으로 좀 더 편하게 보여지도록 고쳐야 한다고 지적받음
-SELECT *
-FROM emp INNER JOIN dept ON emp.deptId = dept.id;
+UPDATE board
+SET `code` = "notice";
 
-# 사장님께 드릴 인명록을 생성(v4, 사장님께서 보시기에 편한 칼럼명(AS))
-SELECT emp.id AS '번호', emp.name AS '이름', emp.position AS '직책', dept.department AS '부서' 
-FROM emp 
-INNER JOIN dept 
-ON emp.deptId = dept.id;
+INSERT INTO board
+SET `name` = '자유',
+`code` = 'free';

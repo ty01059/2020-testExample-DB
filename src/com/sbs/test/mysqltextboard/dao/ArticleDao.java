@@ -15,6 +15,7 @@ public class ArticleDao {
 	public ArticleDao() {
 	}
 
+	// ############ 게시물 #################
 	public List<Article> getArticles() {
 		List<Article> articles = new ArrayList<>();
 		SecSql sql = new SecSql();
@@ -114,46 +115,73 @@ public class ArticleDao {
 		return id;
 	}
 
-	public int createBoard(String boardName) {
-
-		SecSql check = new SecSql();
-		check.append("SELECT name");
-		check.append("FROM board");
-		check.append("WHERE name = ?", boardName);
-
-		Map<String, Object> checker = MysqlUtil.selectRow(check);
-
-		if (checker.size() != 0 || !checker.isEmpty()) {
-			return -1;
-		}
+	// ############ 게시판 #################
+	public int createBoard(String boardName, String code) {
 
 		SecSql sql = new SecSql();
-		sql.append("INSERT INTO board (name)");
-		sql.append("values ( ? )", boardName);
+		sql.append("INSERT INTO board (name, code)");
+		sql.append("values ( ?, ? )", boardName, code);
 
 		int id = MysqlUtil.update(sql);
 
 		return id;
 	}
 
-	public Board selectBoard(int id) {
+	public Board selectBoard(String code) {
 
 		SecSql sql = new SecSql();
 		sql.append("SELECT *");
 		sql.append("FROM board");
-		sql.append("WHERE id = ?", id);
+		sql.append("WHERE code = ?", code);
 
 		Map<String, Object> map = MysqlUtil.selectRow(sql);
-
-		if (map.size() == 0 || map.isEmpty()) {
-			return null;
-		}
 
 		Board board = new Board(map);
 
 		return board;
 	}
 
+	public boolean getBoardNameCheck(String boardName) {
+
+		SecSql sql = new SecSql();
+		sql.append("SELECT id");
+		sql.append("FROM board");
+		sql.append("WHERE name = ?", boardName);
+		
+		boolean result = MysqlUtil.selectRowBooleanValue(sql);
+		System.out.println(result);
+
+		return false;
+	}
+
+	public boolean getBoardCodeCheck(String code) {
+
+		SecSql sql = new SecSql();
+		sql.append("SELECT *");
+		sql.append("FROM board");
+		sql.append("WHERE code = ?", code);
+
+		boolean result = MysqlUtil.selectRowBooleanValue(sql);
+		System.out.println(result);
+
+		return false;
+	}
+
+	public List<Board> getBoards() {
+		SecSql sql = new SecSql();
+		sql.append("SELECT *");
+		sql.append("FROM board");
+
+		List<Map<String, Object>> maps = MysqlUtil.selectRows(sql);
+		List<Board> boards = new ArrayList<>();
+		for (Map<String, Object> map : maps) {
+			Board board = new Board(map);
+			boards.add(board);
+		}
+		return boards;
+	}
+
+	// ############ 댓글 #################
 	public int writeReply(String body, int articleId, int memberId) {
 
 		SecSql sql = new SecSql();
