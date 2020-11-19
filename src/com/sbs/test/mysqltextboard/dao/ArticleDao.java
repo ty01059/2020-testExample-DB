@@ -199,4 +199,14 @@ public class ArticleDao {
 
 		return index;
 	}
+
+	public int deleteReply(int id, int memberId) {
+
+		SecSql sql = new SecSql();
+		sql.append("DELETE FROM articleReply");
+		sql.append("WHERE id = ? AND memberId = ?", id, memberId);
+
+		int result = MysqlUtil.delete(sql);
+		return result;
+	}
 }

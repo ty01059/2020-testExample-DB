@@ -48,7 +48,11 @@ public class ArticleController extends Controller {
 		} else if (code.equals("modifyReply")) {
 			articleModifyReply(cmd);
 		} else if (code.equals("deleteReply")) {
-
+			articleDeleteReply(cmd);
+		} else if (code.equals("recommand")) {
+			articleRecommand(cmd);
+		} else if (code.equals("cancelRecommand")) {
+			articleCancelRecommand(cmd);
 		}
 	}
 
@@ -255,7 +259,59 @@ public class ArticleController extends Controller {
 
 		int index = articleService.modifyReply(id, body, session.getLoginUser().id);
 		if (index == -1) {
-			System.out.println("권한이 없습니다.");
+			System.out.println("댓글이 없거나 수정 권한이 없습니다.");
+			return;
+		}
+		System.out.println("댓글이 수정되었습니다.");
+	}
+
+	private void articleDeleteReply(String cmd) {
+		if (cmd.split(" ").length != 3) {
+			return;
+		}
+
+		int id = Integer.parseInt(cmd.split(" ")[2]);
+
+		if (!session.getLogined()) {
+			System.out.println("로그인이 필요합니다.");
+			return;
+		}
+
+		int result = articleService.deleteReply(id, session.getLoginUser().id);
+		if (result == 0) {
+			System.out.println("댓글이 없거나 삭제 권한이 없습니다.");
+			return;
+		}
+		System.out.println("댓글이 삭제되었습니다.");
+	}
+
+	private void articleRecommand(String cmd) {
+		if (cmd.split(" ").length != 3) {
+			return;
+		}
+
+		System.out.println("== 게시물 추천 ==");
+
+		int articleId = Integer.parseInt(cmd.split(" ")[2]);
+
+		if (!session.getLogined()) {
+			System.out.println("로그인이 필요합니다.");
+			return;
+		}
+
+	}
+
+	private void articleCancelRecommand(String cmd) {
+		if (cmd.split(" ").length != 3) {
+			return;
+		}
+
+		System.out.println("== 게시물 추천 취소 ==");
+
+		int articleId = Integer.parseInt(cmd.split(" ")[2]);
+
+		if (!session.getLogined()) {
+			System.out.println("로그인이 필요합니다.");
 			return;
 		}
 	}

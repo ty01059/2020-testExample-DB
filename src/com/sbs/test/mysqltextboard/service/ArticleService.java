@@ -62,4 +62,8 @@ public class ArticleService {
 	public int modifyReply(int id, String body, int memberId) {
 		return articleDao.modifyReply(id, body, memberId);
 	}
+
+	public int deleteReply(int id, int memberId) {
+		return articleDao.deleteReply(id, memberId);
+	}
 }
