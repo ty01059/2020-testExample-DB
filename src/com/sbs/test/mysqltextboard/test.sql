@@ -8,7 +8,7 @@ USE a1;
 CREATE TABLE article (
 id INT UNSIGNED PRIMARY KEY NOT NULL AUTO_INCREMENT,
 regDate DATETIME NOT NULL,
-updatedate DATETIME NOT NULL,
+updateDate DATETIME NOT NULL,
 title CHAR(200) NOT NULL,
 `body` TEXT NOT NULL,
 memberId INT UNSIGNED NOT NULL,
@@ -129,3 +129,5 @@ SET `code` = "notice";
 INSERT INTO board
 SET `name` = '자유',
 `code` = 'free';
+
+ALTER TABLE article ADD COLUMN `view` INT UNSIGNED NOT NULL;

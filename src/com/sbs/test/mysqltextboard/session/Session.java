@@ -4,9 +4,9 @@ import com.sbs.test.mysqltextboard.dto.Member;
 
 public class Session {
 	private boolean isLogined;
-	private Member loginUser;
+	private Member isLoginMember;
 
-	private int selectBoardId;
+	private int isBoardId;
 
 	public boolean getLogined() {
 		return isLogined;
@@ -16,19 +16,19 @@ public class Session {
 		this.isLogined = isLogined;
 	}
 
-	public Member getLoginUser() {
-		return loginUser;
+	public Member getLoginMember() {
+		return isLoginMember;
 	}
 
-	public void setLoginUser(Member loginUser) {
-		this.loginUser = loginUser;
+	public void setLoginMember(Member isLoginMember) {
+		this.isLoginMember = isLoginMember;
 	}
 
-	public int getSelectBoardId() {
-		return selectBoardId;
+	public int getBoardId() {
+		return isBoardId;
 	}
 
-	public void setSelectBoardId(int id) {
-		this.selectBoardId = id;
+	public void setBoardId(int isBoardId) {
+		this.isBoardId = isBoardId;
 	}
 }

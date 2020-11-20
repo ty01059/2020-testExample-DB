@@ -12,15 +12,15 @@ public class MemberService {
 		memberDao = Container.memberDao;
 	}
 
-	public int join(String id, String pw, String name) {
-		return memberDao.join(id, pw, name);
+	public Member getMemberId(String memberId) {
+		return memberDao.getMemberId(memberId);
 	}
 
-	public Member login(String id, String pw) {
-		return memberDao.login(id, pw);
+	public int join(String memberId, String pw, String name) {
+		return memberDao.join(memberId, pw, name);
 	}
 
-	public void logout() {
-		memberDao.logout();
+	public Member login(String memberId, String pw) {
+		return memberDao.login(memberId, pw);
 	}
 }

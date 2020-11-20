@@ -15,61 +15,90 @@ public class ArticleDao {
 	public ArticleDao() {
 	}
 
-	// ############ 게시물 #################
-	public List<Article> getArticles() {
-		List<Article> articles = new ArrayList<>();
-		SecSql sql = new SecSql();
-		sql.append("SELECT article.*, member.memberId AS writer");
-		sql.append("FROM article");
-		sql.append("INNER JOIN member");
-		sql.append("ON article.memberId = member.id");
-		sql.append("ORDER BY id desc");
+	// ############ 게시판 #################
 
-		List<Map<String, Object>> maps = MysqlUtil.selectRows(sql);
-
-		for (Map<String, Object> map : maps) {
-			Article article = new Article(map);
-			articles.add(article);
-		}
-
-		return articles;
-	}
-
-	public List<Article> getArticles(int boardId) {
-		List<Article> articles = new ArrayList<>();
-		SecSql sql = new SecSql();
-		sql.append("SELECT article.*, member.memberId AS writer");
-		sql.append("FROM article");
-		sql.append("INNER JOIN member");
-		sql.append("ON article.memberId = member.id");
-		sql.append("WHERE boardId = ?", boardId);
-		sql.append("ORDER BY id desc");
-
-		List<Map<String, Object>> maps = MysqlUtil.selectRows(sql);
-
-		for (Map<String, Object> map : maps) {
-			Article article = new Article(map);
-			articles.add(article);
-		}
-
-		return articles;
-	}
-
-	public Article getArticle(int index) {
+	public boolean getBoardWithName(String name) {
 
 		SecSql sql = new SecSql();
-		sql.append("SELECT article.*, member.memberId AS writer");
-		sql.append("FROM article");
-		sql.append("INNER JOIN member");
-		sql.append("ON article.memberId = member.id");
-		sql.append("WHERE article.id = ?", index);
+		sql.append("SELECT *");
+		sql.append("FROM board");
+		sql.append("WHERE name = ?", name);
 
 		Map<String, Object> map = MysqlUtil.selectRow(sql);
-
-		Article article = new Article(map);
-
-		return article;
+		if (!map.isEmpty()) {
+			return true;
+		}
+		return false;
 	}
+
+	public boolean getBoardWithCode(String code) {
+
+		SecSql sql = new SecSql();
+		sql.append("SELECT *");
+		sql.append("FROM board");
+		sql.append("WHERE code = ?", code);
+
+		Map<String, Object> map = MysqlUtil.selectRow(sql);
+		if (!map.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+
+	public int makeBoard(String boardName, String code) {
+
+		SecSql sql = new SecSql();
+		sql.append("INSERT INTO board (name, code)");
+		sql.append("values ( ?, ? )", boardName, code);
+
+		int id = MysqlUtil.update(sql);
+
+		return id;
+	}
+
+	public Board getBoard(String code) {
+
+		SecSql sql = new SecSql();
+		sql.append("SELECT *");
+		sql.append("FROM board");
+		sql.append("WHERE code = ?", code);
+
+		Map<String, Object> map = MysqlUtil.selectRow(sql);
+		Board board = new Board(map);
+
+		return board;
+	}
+
+	public Board getBoard(int id) {
+
+		SecSql sql = new SecSql();
+		sql.append("SELECT *");
+		sql.append("FROM board");
+		sql.append("WHERE id = ?", id);
+
+		Map<String, Object> map = MysqlUtil.selectRow(sql);
+		Board board = new Board(map);
+
+		return board;
+	}
+
+	public List<Board> getBoards() {
+
+		SecSql sql = new SecSql();
+		sql.append("SELECT *");
+		sql.append("FROM board");
+
+		List<Map<String, Object>> maps = MysqlUtil.selectRows(sql);
+		List<Board> boards = new ArrayList<>();
+
+		for (Map<String, Object> map : maps) {
+			Board board = new Board(map);
+			boards.add(board);
+		}
+		return boards;
+	}
+
+	// ############ 게시물 #################
 
 	public int add(String title, String body, int memberId, int boardId) {
 
@@ -115,73 +144,73 @@ public class ArticleDao {
 		return id;
 	}
 
-	// ############ 게시판 #################
-	public int createBoard(String boardName, String code) {
-
+	public void setArticleCount(int id, int count) {
 		SecSql sql = new SecSql();
-		sql.append("INSERT INTO board (name, code)");
-		sql.append("values ( ?, ? )", boardName, code);
+		sql.append("UPDATE article");
+		sql.append("SET view = ?", count);
+		sql.append("WHERE id = ?", id);
 
-		int id = MysqlUtil.update(sql);
-
-		return id;
+		MysqlUtil.update(sql);
 	}
 
-	public Board selectBoard(String code) {
+	public Article getArticle(int id) {
 
 		SecSql sql = new SecSql();
-		sql.append("SELECT *");
-		sql.append("FROM board");
-		sql.append("WHERE code = ?", code);
+		sql.append("SELECT A.*, B.memberId AS writer");
+		sql.append("FROM article AS A");
+		sql.append("INNER JOIN `member` AS B");
+		sql.append("ON A.memberId = B.id");
+		sql.append("WHERE A.id = ?", id);
 
 		Map<String, Object> map = MysqlUtil.selectRow(sql);
 
-		Board board = new Board(map);
-
-		return board;
+		if (!map.isEmpty()) {
+			return new Article(map);
+		}
+		return null;
 	}
 
-	public boolean getBoardNameCheck(String boardName) {
-
+	public List<Article> getArticles() {
+		List<Article> articles = new ArrayList<>();
 		SecSql sql = new SecSql();
-		sql.append("SELECT id");
-		sql.append("FROM board");
-		sql.append("WHERE name = ?", boardName);
-		
-		boolean result = MysqlUtil.selectRowBooleanValue(sql);
-		System.out.println(result);
-
-		return false;
-	}
-
-	public boolean getBoardCodeCheck(String code) {
-
-		SecSql sql = new SecSql();
-		sql.append("SELECT *");
-		sql.append("FROM board");
-		sql.append("WHERE code = ?", code);
-
-		boolean result = MysqlUtil.selectRowBooleanValue(sql);
-		System.out.println(result);
-
-		return false;
-	}
-
-	public List<Board> getBoards() {
-		SecSql sql = new SecSql();
-		sql.append("SELECT *");
-		sql.append("FROM board");
+		sql.append("SELECT article.*, member.memberId AS writer");
+		sql.append("FROM article");
+		sql.append("INNER JOIN member");
+		sql.append("ON article.memberId = member.id");
+		sql.append("ORDER BY id desc");
 
 		List<Map<String, Object>> maps = MysqlUtil.selectRows(sql);
-		List<Board> boards = new ArrayList<>();
+
 		for (Map<String, Object> map : maps) {
-			Board board = new Board(map);
-			boards.add(board);
+			Article article = new Article(map);
+			articles.add(article);
 		}
-		return boards;
+
+		return articles;
+	}
+
+	public List<Article> getArticles(int boardId) {
+		List<Article> articles = new ArrayList<>();
+		SecSql sql = new SecSql();
+		sql.append("SELECT article.*, member.memberId AS writer");
+		sql.append("FROM article");
+		sql.append("INNER JOIN member");
+		sql.append("ON article.memberId = member.id");
+		sql.append("WHERE boardId = ?", boardId);
+		sql.append("ORDER BY id desc");
+
+		List<Map<String, Object>> maps = MysqlUtil.selectRows(sql);
+
+		for (Map<String, Object> map : maps) {
+			Article article = new Article(map);
+			articles.add(article);
+		}
+
+		return articles;
 	}
 
 	// ############ 댓글 #################
+
 	public int writeReply(String body, int articleId, int memberId) {
 
 		SecSql sql = new SecSql();

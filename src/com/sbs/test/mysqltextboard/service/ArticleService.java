@@ -15,14 +15,32 @@ public class ArticleService {
 		articleDao = Container.articleDao;
 	}
 
-	// ############ 게시물 #################
-	public List<Article> getArticles() {
-		return articleDao.getArticles();
+	// ############ 게시판 #################
+	public boolean getBoardWithName(String name) {
+		return articleDao.getBoardWithName(name);
 	}
 
-	public List<Article> getArticles(int id) {
-		return articleDao.getArticles(id);
+	public boolean getBoardWithCode(String code) {
+		return articleDao.getBoardWithCode(code);
 	}
+
+	public int makeBoard(String boardName, String code) {
+		return articleDao.makeBoard(boardName, code);
+	}
+
+	public Board getBoard(String code) {
+		return articleDao.getBoard(code);
+	}
+
+	public Board getBoard(int id) {
+		return articleDao.getBoard(id);
+	}
+
+	public List<Board> getBoards() {
+		return articleDao.getBoards();
+	}
+
+	// ############ 게시물 #################
 
 	public int add(String title, String body, int memberId, int boardId) {
 		return articleDao.add(title, body, memberId, boardId);
@@ -36,33 +54,24 @@ public class ArticleService {
 		return articleDao.modify(index, title, body, memberId);
 	}
 
-	public Article getArticle(int index) {
-		return articleDao.getArticle(index);
-	}
-
 	public int delete(int index) {
 		return articleDao.delete(index);
 	}
 
-	// ############ 게시판 #################
-	public int createBoard(String boardName, String code) {
-		return articleDao.createBoard(boardName, code);
+	public void setArticleCount(int id, int count) {
+		articleDao.setArticleCount(id, count);
 	}
 
-	public Board selectBoard(String code) {
-		return articleDao.selectBoard(code);
+	public Article getArticle(int id) {
+		return articleDao.getArticle(id);
 	}
 
-	public boolean getBoardNameCheck(String boardName) {
-		return articleDao.getBoardNameCheck(boardName);
+	public List<Article> getArticles() {
+		return articleDao.getArticles();
 	}
 
-	public boolean getBoardCodeCheck(String code) {
-		return articleDao.getBoardCodeCheck(code);
-	}
-
-	public List<Board> getBoards() {
-		return articleDao.getBoards();
+	public List<Article> getArticles(int id) {
+		return articleDao.getArticles(id);
 	}
 
 	// ############ 댓글 #################

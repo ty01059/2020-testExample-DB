@@ -20,82 +20,83 @@ public class MemberController extends Controller {
 	}
 
 	public void doCmd(String cmd) {
-		if (cmd.equals("member join")) {
-			memberJoin();
-		} else if (cmd.equals("member login")) {
-			memberLogin();
-		} else if (cmd.equals("member whoami")) {
-			memeberInfo();
-		} else if (cmd.equals("member logout")) {
-			memberLogout();
+		String keyword = cmd.split(" ")[1];
+
+		if (keyword.equals("join")) {
+			doJoin();
+		} else if (keyword.equals("login")) {
+			doLogin();
+		} else if (keyword.equals("whoami")) {
+			doWhoami();
+		} else if (keyword.equals("logout")) {
+			doLogout();
+		} else {
+			return;
 		}
 	}
 
-	private void memberJoin() {
+	public String getAdmin() {
+		return session.getLoginMember().memberId.equals("aa") ? "관리자" : "일반";
+	}
+
+	private void doJoin() {
 		System.out.println("== 회원가입 ==");
 
-		System.out.printf("ID : ");
+		System.out.printf("id : ");
 		String id = sc.nextLine();
-		System.out.printf("Password : ");
-		String pw = sc.nextLine();
-		System.out.printf("Name : ");
-		String name = sc.nextLine();
 
-		int result = memberService.join(id, pw, name);
-		if (result == -1) {
-			System.out.println("이미 생성된 아이디입니다.");
+		if (memberService.getMemberId(id) != null) {
+			System.out.println("이미 가입된 id가 존재합니다.");
 			return;
 		}
+
+		System.out.printf("pw : ");
+		String pw = sc.nextLine();
+		System.out.printf("name : ");
+		String name = sc.nextLine();
+
+		memberService.join(id, pw, name);
+
 		System.out.printf("%s님 환영합니다.\n", id);
 	}
 
-	private void memberLogin() {
+	private void doLogin() {
 		System.out.println("== 로그인 ==");
 
-		if (session.getLogined()) {
-			System.out.println("이미 로그인이 되어있습니다.");
-			return;
-		}
-
-		System.out.printf("ID : ");
+		System.out.printf("id : ");
 		String id = sc.nextLine();
-		System.out.printf("Password : ");
+		System.out.printf("pw : ");
 		String pw = sc.nextLine();
 
 		Member member = memberService.login(id, pw);
+
 		if (member == null) {
-			System.out.println("사용자 정보가 없는 정보입니다.");
+			System.out.println("id 또는 pw가 일치하지 않습니다.");
 			return;
 		}
-		System.out.printf("%s님 로그인되었습니다.\n", id);
+
 		session.setLogined(true);
-		session.setLoginUser(member);
+		session.setLoginMember(member);
+		System.out.println("로그인 되었습니다.");
 	}
 
-	private void memeberInfo() {
+	private void doWhoami() {
 		System.out.println("== 로그인 사용자 정보 ==");
 
-		if (!session.getLogined()) {
-			System.out.println("로그인이 필요합니다.");
-			return;
-		}
-
-		Member member = session.getLoginUser();
-
+		Member member = session.getLoginMember();
 		System.out.printf("id : %d\n", member.id);
 		System.out.printf("memberId : %s\n", member.memberId);
 		System.out.printf("pw : %s\n", member.password);
 		System.out.printf("name : %s\n", member.name);
+		System.out.printf("계정권한 : %s\n", getAdmin());
 	}
 
-	private void memberLogout() {
+	private void doLogout() {
 		System.out.println("== 로그아웃 ==");
 
-		if (!session.getLogined()) {
-			System.out.println("로그인이 필요합니다.");
-			return;
-		}
+		session.setLogined(false);
+		session.setLoginMember(null);
 
-		memberService.logout();
+		System.out.println("로그아웃 되었습니다.");
 	}
 }
