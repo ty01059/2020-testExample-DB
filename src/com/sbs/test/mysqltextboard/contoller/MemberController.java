@@ -16,7 +16,7 @@ public class MemberController extends Controller {
 	public MemberController() {
 		sc = Container.scanner;
 		session = Container.session;
-		memberService = Container.memberSerivce;
+		memberService = Container.memberService;
 	}
 
 	public void doCmd(String cmd) {
@@ -33,10 +33,6 @@ public class MemberController extends Controller {
 		} else {
 			return;
 		}
-	}
-
-	public String getAdmin() {
-		return session.getLoginMember().memberId.equals("aa") ? "관리자" : "일반";
 	}
 
 	private void doJoin() {
@@ -88,7 +84,7 @@ public class MemberController extends Controller {
 		System.out.printf("memberId : %s\n", member.memberId);
 		System.out.printf("pw : %s\n", member.password);
 		System.out.printf("name : %s\n", member.name);
-		System.out.printf("계정권한 : %s\n", getAdmin());
+		System.out.printf("계정권한 : %s\n", member.getType());
 	}
 
 	private void doLogout() {

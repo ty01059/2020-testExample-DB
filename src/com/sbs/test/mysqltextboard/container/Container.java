@@ -16,8 +16,8 @@ public class Container {
 
 	public static MemberDao memberDao;
 	public static ArticleDao articleDao;
-	public static MemberService memberSerivce;
-	public static ArticleService aritlceSerivce;
+	public static MemberService memberService;
+	public static ArticleService aritlceService;
 	public static MemberController memberController;
 	public static ArticleController articleController;
 
@@ -27,8 +27,8 @@ public class Container {
 
 		memberDao = new MemberDao();
 		articleDao = new ArticleDao();
-		memberSerivce = new MemberService();
-		aritlceSerivce = new ArticleService();
+		memberService = new MemberService();
+		aritlceService = new ArticleService();
 		memberController = new MemberController();
 		articleController = new ArticleController();
 	}

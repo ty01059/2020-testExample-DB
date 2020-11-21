@@ -5,12 +5,15 @@ import java.util.*;
 import com.sbs.test.mysqltextboard.container.Container;
 import com.sbs.test.mysqltextboard.dto.Article;
 import com.sbs.test.mysqltextboard.dto.Board;
+import com.sbs.test.mysqltextboard.dto.Member;
 import com.sbs.test.mysqltextboard.service.ArticleService;
+import com.sbs.test.mysqltextboard.service.MemberService;
 import com.sbs.test.mysqltextboard.session.Session;
 
 public class ArticleController extends Controller {
 
 	private ArticleService articleService;
+	private MemberService memberService;
 	private Scanner sc;
 	private Session session;
 	private Board board;
@@ -19,7 +22,8 @@ public class ArticleController extends Controller {
 	private int thr = 3;
 
 	public ArticleController() {
-		articleService = Container.aritlceSerivce;
+		articleService = Container.aritlceService;
+		memberService = Container.memberService;
 		sc = Container.scanner;
 		session = Container.session;
 		session.setBoardId(1);
@@ -81,7 +85,13 @@ public class ArticleController extends Controller {
 	// ######################## 게시판 #################################
 
 	private void articleCreateBoard() {
-		System.out.println("== 게시판 추가 ==");
+		System.out.println("== 게시판 작성 ==");
+
+		Member member = memberService.getMemberId(session.getLoginMember().memberId);
+		if (!member.isAdmin()) {
+			System.out.println("관리자만 게시판을 생성할 수 있습니다.");
+			return;
+		}
 
 		System.out.printf("boardName : ");
 		String boardName = sc.nextLine();
@@ -100,9 +110,6 @@ public class ArticleController extends Controller {
 		}
 
 		int id = articleService.makeBoard(boardName, code);
-		if (id == -1) {
-			System.out.printf("%s 게시판이름이 이미 생성되어있습니다.\n", boardName);
-		}
 		System.out.printf("%s(%d번) 게시판이 생성되었습니다.\n", boardName, id);
 	}
 
@@ -112,9 +119,9 @@ public class ArticleController extends Controller {
 		System.out.println("= 게시판 목록 =");
 		List<Board> boards = articleService.getBoards();
 
-		System.out.println("번호  /  이름  /  코드");
+		System.out.println("번호  /  이름  /  코드  /  게시물 수");
 		for (Board board : boards) {
-			System.out.printf("%d  /  %s  /  %s\n", board.id, board.name, board.code);
+			System.out.printf("%d  /  %s  /  %s  /  %d\n", board.id, board.name, board.code, board.articleCount);
 		}
 
 		System.out.printf("code : ");
@@ -159,6 +166,16 @@ public class ArticleController extends Controller {
 			System.out.println("로그인이 필요합니다.");
 			return;
 		}
+
+		System.out.printf("title : ");
+		String title = sc.nextLine();
+		System.out.printf("body : ");
+		String body = sc.nextLine();
+		int memberId = session.getLoginMember().id;
+		int boardId = session.getBoardId();
+
+		int id = articleService.add(title, body, memberId, boardId);
+		System.out.printf("%d번 게시물이 생성되었습니다.\n", id);
 	}
 
 	private void articleUpdate(String cmd) {

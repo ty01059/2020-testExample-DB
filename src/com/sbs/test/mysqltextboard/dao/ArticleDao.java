@@ -85,8 +85,11 @@ public class ArticleDao {
 	public List<Board> getBoards() {
 
 		SecSql sql = new SecSql();
-		sql.append("SELECT *");
-		sql.append("FROM board");
+		sql.append("SELECT B.*, COUNT(A.boardId) AS articleCount");
+		sql.append("FROM board AS B");
+		sql.append("INNER JOIN article AS A");
+		sql.append("ON B.id = A.boardId");
+		sql.append("GROUP BY A.boardId");
 
 		List<Map<String, Object>> maps = MysqlUtil.selectRows(sql);
 		List<Board> boards = new ArrayList<>();
@@ -103,7 +106,7 @@ public class ArticleDao {
 	public int add(String title, String body, int memberId, int boardId) {
 
 		SecSql sql = new SecSql();
-		sql.append("INSERT into article (regdate, updatedate, title, `body`, memberId, boardId)");
+		sql.append("INSERT into article (regdate, updateDate, title, `body`, memberId, boardId)");
 		sql.append("VALUES (NOW(), NOW(), ?, ?, ?, ?)", title, body, memberId, boardId);
 
 		int id = MysqlUtil.insert(sql);
@@ -114,7 +117,7 @@ public class ArticleDao {
 
 		SecSql sql = new SecSql();
 		sql.append("UPDATE article");
-		sql.append("SET updatedate = NOW()");
+		sql.append("SET updateDate = NOW()");
 		sql.append("WHERE id = ?", index);
 
 		int result = MysqlUtil.update(sql);
@@ -128,7 +131,7 @@ public class ArticleDao {
 		sql.append("UPDATE article");
 		sql.append("SET title = ?,", title);
 		sql.append("`body` = ?,", body);
-		sql.append("updatedate = NOW()");
+		sql.append("updateDate = NOW()");
 		sql.append("WHERE id = ? and memberId = ?", index, memberId);
 
 		int result = MysqlUtil.update(sql);
