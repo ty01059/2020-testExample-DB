@@ -57,6 +57,12 @@ public class ArticleController extends Controller {
 		} else if (code.equals("delete")) {
 			errMsg(cmd, thr);
 			articleDelete(cmd);
+		} else if (code.equals("recommand")) {
+			errMsg(cmd, thr);
+			articleRecommand(cmd);
+		} else if (code.equals("cancelRecommand")) {
+			errMsg(cmd, thr);
+			articleCancelRecommand(cmd);
 		} else if (code.equals("writeReply")) {
 			errMsg(cmd, thr);
 			articleReply(cmd);
@@ -66,12 +72,6 @@ public class ArticleController extends Controller {
 		} else if (code.equals("deleteReply")) {
 			errMsg(cmd, thr);
 			articleDeleteReply(cmd);
-		} else if (code.equals("recommand")) {
-			errMsg(cmd, thr);
-			articleRecommand(cmd);
-		} else if (code.equals("cancelRecommand")) {
-			errMsg(cmd, thr);
-			articleCancelRecommand(cmd);
 		}
 	}
 
@@ -272,6 +272,34 @@ public class ArticleController extends Controller {
 		System.out.printf("%d번 게시물이 삭제되었습니다.\n", index);
 	}
 
+	private void articleRecommand(String cmd) {
+
+		System.out.println("== 게시물 추천 ==");
+
+		int articleId = Integer.parseInt(cmd.split(" ")[2]);
+		int memberId = session.getLoginMember().id;
+
+		if (!session.getLogined()) {
+			System.out.println("로그인이 필요합니다.");
+			return;
+		}
+		
+		articleService.Recommand(articleId, memberId);
+
+	}
+
+	private void articleCancelRecommand(String cmd) {
+
+		System.out.println("== 게시물 추천 취소 ==");
+
+		int articleId = Integer.parseInt(cmd.split(" ")[2]);
+
+		if (!session.getLogined()) {
+			System.out.println("로그인이 필요합니다.");
+			return;
+		}
+	}
+
 	// ######################## 댓글 #################################
 
 	private void articleReply(String cmd) {
@@ -338,36 +366,5 @@ public class ArticleController extends Controller {
 			return;
 		}
 		System.out.println("댓글이 삭제되었습니다.");
-	}
-
-	private void articleRecommand(String cmd) {
-		if (cmd.split(" ").length != 3) {
-			return;
-		}
-
-		System.out.println("== 게시물 추천 ==");
-
-		Integer.parseInt(cmd.split(" ")[2]);
-
-		if (!session.getLogined()) {
-			System.out.println("로그인이 필요합니다.");
-			return;
-		}
-
-	}
-
-	private void articleCancelRecommand(String cmd) {
-		if (cmd.split(" ").length != 3) {
-			return;
-		}
-
-		System.out.println("== 게시물 추천 취소 ==");
-
-		Integer.parseInt(cmd.split(" ")[2]);
-
-		if (!session.getLogined()) {
-			System.out.println("로그인이 필요합니다.");
-			return;
-		}
 	}
 }

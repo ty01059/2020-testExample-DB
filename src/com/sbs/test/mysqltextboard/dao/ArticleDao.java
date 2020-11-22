@@ -212,6 +212,14 @@ public class ArticleDao {
 		return articles;
 	}
 
+	public int Recommand(int articleId, int memberId) {
+
+		SecSql sql = new SecSql();
+		sql.append("UPDATE");
+		sql.append("INSERT INTO");
+		return 0;
+	}
+
 	// ############ 댓글 #################
 
 	public int writeReply(String body, int articleId, int memberId) {

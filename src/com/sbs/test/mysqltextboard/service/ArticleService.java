@@ -74,6 +74,10 @@ public class ArticleService {
 		return articleDao.getArticles(id);
 	}
 
+	public int Recommand(int articleId, int memberId) {
+		return articleDao.Recommand(articleId, memberId);
+	}
+
 	// ############ 댓글 #################
 	public int writeReply(String body, int articleId, int memberId) {
 		return articleDao.writeReply(body, articleId, memberId);
