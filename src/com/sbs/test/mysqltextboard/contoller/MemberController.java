@@ -20,6 +20,10 @@ public class MemberController extends Controller {
 	}
 
 	public void doCmd(String cmd) {
+		if (cmd.split(" ").length < 2) {
+			return;
+		}
+
 		String keyword = cmd.split(" ")[1];
 
 		if (keyword.equals("join")) {

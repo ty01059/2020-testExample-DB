@@ -22,7 +22,7 @@ public class ArticleController extends Controller {
 	private int thr = 3;
 
 	public ArticleController() {
-		articleService = Container.aritlceService;
+		articleService = Container.articleService;
 		memberService = Container.memberService;
 		sc = Container.scanner;
 		session = Container.session;
@@ -31,6 +31,10 @@ public class ArticleController extends Controller {
 	}
 
 	public void doCmd(String cmd) {
+		if (cmd.split(" ").length < 2) {
+			return;
+		}
+
 		String code = cmd.split(" ")[1];
 
 		if (code.equals("createBoard")) {
@@ -283,7 +287,7 @@ public class ArticleController extends Controller {
 			System.out.println("로그인이 필요합니다.");
 			return;
 		}
-		
+
 		articleService.Recommand(articleId, memberId);
 
 	}

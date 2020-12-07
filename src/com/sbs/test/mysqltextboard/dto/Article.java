@@ -13,7 +13,7 @@ public class Article {
 	public int boardId;
 	public String writer;
 	public int view;
-	public int recommand;
+//	public int recommand;
 
 	public Article() {
 	}
@@ -28,6 +28,6 @@ public class Article {
 		this.boardId = (int) map.get("boardId");
 		this.writer = (String) map.get("writer");
 		this.view = (int) map.get("view");
-		this.recommand = (int) map.get("recommand");
+//		this.recommand = (int) map.get("recommand");
 	}
 }
