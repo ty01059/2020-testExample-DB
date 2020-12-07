@@ -88,8 +88,13 @@ public class BuildService {
 			sb.append("갱신날짜 : " + article.updateDate + "<br>");
 			sb.append("제목 : " + article.title + "<br>");
 			sb.append("내용 : " + article.body + "<br>");
-			sb.append("<a href=\"../article/" + (article.id - 1) + ".html\">이전글</a><br>");
-			sb.append("<a href=\"../article/" + (article.id + 1) + ".html\">다음글</a><br>");
+
+			if (article.id > 1) {
+				sb.append("<a href=\"../article/" + (article.id - 1) + ".html\">이전글</a><br>");
+			}
+			if (article.id < articles.size()) {
+				sb.append("<a href=\"../article/" + (article.id + 1) + ".html\">다음글</a><br>");
+			}
 			sb.append("<a href=\"../home/index.html\">HOME</a><br>");
 
 			sb.append("</div>");
