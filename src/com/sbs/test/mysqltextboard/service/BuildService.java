@@ -10,11 +10,14 @@ import com.sbs.test.mysqltextboard.fileUtil.Util;
 public class BuildService {
 
 	private ArticleService articleService;
-	private MemberService memberService;
+//	private MemberService memberService;
+	private Thread thread;
+	private boolean buildSiteAuto;
 
 	public BuildService() {
 		articleService = Container.articleService;
-		memberService = Container.memberService;
+//		memberService = Container.memberService;
+		thread = new Thread();
 	}
 
 	public void buildSite() {
@@ -101,36 +104,16 @@ public class BuildService {
 		int nextArticleId = 0;
 		int previousArticleId = 0;
 
-//		for (int i = 0; i < articles.size(); i++) {
-//		if (articles.get(i).boardId == board.id) {
-//			sb.append("<a href=\"../article/" + articles.get(i).id + ".html\">" + articles.get(i).id
-//					+ "번 게시글</a><br>");
-//
-//			// next edit
-//			int nextArticleId = 0;
-//			for (int j = i + 1; j < articles.size(); j++) {
-//				if (articles.get(j).boardId == board.id) {
-//					nextArticleId = articles.get(j).id;
-//					break;
-//				}
-//			}
-//
-//			// previous edit
-//			int previousArticleId = 0;
-//			for (int j = i - 1; j >= 0; j--) {
-//				if (articles.get(j).boardId == board.id) {
-//					previousArticleId = articles.get(j).id;
-//					break;
-//				}
-//			}
-//		}
-//	}
-
-		// next edit
-//		nextArticleId = articles.get(newArticle.id).id;
-
-		// previous edit
-//		previousArticleId = articles.get(newArticle.id).id;
+		for (int i = 0; i < articles.size(); i++) {
+			if (article.id == articles.get(i).id) {
+				if (i < articles.size() - 1) {
+					nextArticleId = articles.get(i + 1).id;
+				}
+				if (i > 0) {
+					previousArticleId = articles.get(i - 1).id;
+				}
+			}
+		}
 
 		StringBuilder sb = new StringBuilder();
 
@@ -181,12 +164,24 @@ public class BuildService {
 	}
 
 	// 별도의 쓰레드를 켜서 build site 명령을 10초에 한번씩 수행한다. 즉 자동빌드켜기
-	public void startAutoSite() {
-
+	public void StartAutoSite() {
+		buildSiteAuto = true;
+//		thread
+		new Thread(() -> {
+			while (buildSiteAuto) {
+				System.out.println(Thread.currentThread() + " : 작업");
+//				buildSite();
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+				}
+			}
+		}).start();
 	}
 
 	// 쓰레드를 끈다. 즉 자동빌드끄기
-	public void stopAutoSite() {
-
+	public void StopAutoSite() {
+		buildSiteAuto = false;
+//		thread.interrupt();
 	}
 }
