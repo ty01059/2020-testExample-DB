@@ -11,13 +11,11 @@ public class BuildService {
 
 	private ArticleService articleService;
 //	private MemberService memberService;
-	private Thread thread;
 	private boolean buildSiteAuto;
 
 	public BuildService() {
 		articleService = Container.articleService;
 //		memberService = Container.memberService;
-		thread = new Thread();
 	}
 
 	public void buildSite() {
@@ -43,7 +41,7 @@ public class BuildService {
 		sb.append("<a href=\"index.html\">HOME</a><br>");
 		// board 테이블의 코드를 가져와서 code-$.html 생성하고
 		for (Board board : boards) {
-			sb.append("<a href=\"../article/" + board.code + "-list.html\">" + board.name + " 게시판</a><br>");
+			sb.append("<a href=\"../article/" + board.code + "-list_1.html\">" + board.name + " 게시판</a><br>");
 
 			articleListInBoard(board);
 		}
@@ -63,40 +61,61 @@ public class BuildService {
 		System.out.println("site/article 폴더 생성");
 		Util.mkdirs("site/article");
 
-		StringBuilder sb = new StringBuilder();
 		List<Article> articles = articleService.getArticles(board.id);
+		int boardListLength = 10;
 
-		sb.append("<!DOCTYPE html>");
-		sb.append("<html lang=\"ko\">");
+		// 1 10 15
+		// 1 1 2
+		int paging = Double.valueOf(articles.size()) / 10 > 1 ? articles.size() / 10 + 1 : 1;
+		for (int i = 1; i <= paging; i++) {
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append("<!DOCTYPE html>");
+			sb.append("<html lang=\"ko\">");
 
-		sb.append("<head>");
-		sb.append("<meta charset=\"UTF-8\">");
-		sb.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-		sb.append("</head>");
+			sb.append("<head>");
+			sb.append("<meta charset=\"UTF-8\">");
+			sb.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+			sb.append("</head>");
 
-		sb.append("<body>");
+			sb.append("<body>");
 
-		sb.append("<h1>" + board.name + " 게시판</h1>");
+			sb.append("<h1>" + board.name + " 게시판</h1>");
 
-		sb.append("<div>");
+			sb.append("<div>");
 
-		sb.append("<a href=\"../home/index.html\">HOME</a><br>");
+			sb.append("<a href=\"../home/index.html\">HOME</a><br>");
 
-		for (Article article : articles) {
-			sb.append("<a href=\"../article/" + article.id + ".html\">" + article.id + "번 게시글</a><br>");
+			int startList = (i - 1) * boardListLength;
 
-			articleDetailSite(article, articles);
+			for (int j = startList; j < startList + boardListLength; j++) {
+				if (j > articles.size() - 1) {
+					break;
+				}
+				sb.append("<a href=\"../article/" + articles.get(j).id + ".html\">" + articles.get(j).id
+						+ "번 게시글</a><br>");
+
+				articleDetailSite(articles.get(j), articles);
+			}
+
+			sb.append("</div>");
+
+			sb.append("</body>");
+
+			sb.append("<footer>");
+			sb.append("<div>");
+			for (int j = 1; j <= paging; j++) {
+				sb.append("<a href=\"../article/" + board.code + "-list_" + j + ".html\">" + j + " </a>");
+			}
+			sb.append("</div>");
+			sb.append("</footer>");
+
+			sb.append("</html>");
+
+			String filePath = "site/article/" + board.code + "-list_" + i + ".html";
+
+			Util.writeFile(filePath, sb.toString());
 		}
-
-		sb.append("</div>");
-
-		sb.append("</body>");
-
-		sb.append("</html>");
-
-		String filePath = "site/article/" + board.code + "-list.html";
-
-		Util.writeFile(filePath, sb.toString());
 	}
 
 	private void articleDetailSite(Article article, List<Article> articles) {
@@ -166,7 +185,6 @@ public class BuildService {
 	// 별도의 쓰레드를 켜서 build site 명령을 10초에 한번씩 수행한다. 즉 자동빌드켜기
 	public void StartAutoSite() {
 		buildSiteAuto = true;
-//		thread
 		new Thread(() -> {
 			while (buildSiteAuto) {
 				System.out.println(Thread.currentThread() + " : 작업");

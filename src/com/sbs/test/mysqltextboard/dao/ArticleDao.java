@@ -106,8 +106,8 @@ public class ArticleDao {
 	public int add(String title, String body, int memberId, int boardId) {
 
 		SecSql sql = new SecSql();
-		sql.append("INSERT into article (regdate, updateDate, title, `body`, memberId, boardId)");
-		sql.append("VALUES (NOW(), NOW(), ?, ?, ?, ?)", title, body, memberId, boardId);
+		sql.append("INSERT into article (regdate, updateDate, title, `body`, memberId, boardId, view)");
+		sql.append("VALUES (NOW(), NOW(), ?, ?, ?, ?, 0)", title, body, memberId, boardId);
 
 		int id = MysqlUtil.insert(sql);
 		return id;
