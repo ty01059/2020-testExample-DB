@@ -134,16 +134,20 @@ public class BuildService {
 						+ articles.get(j).title + "</a>");
 				sb.append("</div>");
 				sb.append("</div>");
-				articleDetailSite(articles.get(j), articles);
+				articleDetailSite(articles.get(j), articles, i);
 			}
 
 			// page
-			sb.append("<div class=\"article-list-page\">");
+			sb.append("<div class=\"article-page-menu\">");
+			sb.append("<ul class=\"flex flex-jc-c\">");
+			sb.append("<li><a href=\"#\" class=\"flex flex-ai-c\"> &lt; 이전</a></li>");
 			for (int j = 1; j <= paging; j++) {
-				sb.append("<a href=\"../article/" + board.code + "-list_" + j + ".html\">" + j + " </a>");
+				sb.append("<li><a href=\"../article/" + board.code + "-list_" + j + ".html\" class=\"flex flex-ai-c article-page-menu__link--selected\">" + j + " </a></li>");
 			}
-
+			sb.append("<li><a href=\"#\" class=\"flex flex-ai-c\">다음 &gt;</a></li>");
+			sb.append("</ul>");
 			sb.append("</div>");
+			
 			sb.append("</div>");
 			sb.append("</section>");
 			sb.append("</div>");
@@ -157,7 +161,7 @@ public class BuildService {
 		}
 	}
 
-	private void articleDetailSite(Article article, List<Article> articles) {
+	private void articleDetailSite(Article article, List<Article> articles, int page) {
 
 		int nextArticleId = 0;
 		int previousArticleId = 0;
@@ -172,14 +176,14 @@ public class BuildService {
 				}
 			}
 		}
-		
+
 		Board board = articleService.getBoard(article.boardId);
-		
+
 		StringBuilder sb = new StringBuilder();
 		String head = getHeadHtml("detail");
 
 		sb.append(head);
-		
+
 		sb.append("<main class=\"flex-grow-1\">");
 		sb.append("<div class=\"flex flex-column\">");
 
@@ -193,9 +197,9 @@ public class BuildService {
 		sb.append("</div>");
 		sb.append("</h1>");
 		sb.append("</section>");
-		
-		sb.append("<div class=\"con\">");
-		
+
+		sb.append("<div class=\"con con-min-width\">");
+
 		sb.append("<section class=\"article_detail\">");
 		sb.append("<div class=\"title_writer\">");
 		sb.append("<div class=\"title\">");
@@ -221,24 +225,32 @@ public class BuildService {
 		sb.append("<div>" + article.updateDate + "</div>");
 		sb.append("</div>");
 		sb.append("<div class=\"view\">");
-		sb.append("<div>조회수</div>");
+		sb.append("<div>조회수 &nbsp; <i class=\"fas fa-eye\"></i></div>");
 		sb.append("<div>" + article.view + "</div>");
 		sb.append("</div>");
 		sb.append("</div>");
 		sb.append("<div class=\"body\">" + article.body + "</div>");
 		sb.append("<div class=\"foot\">" + board.name + " 게시판 게시물</div>");
 		sb.append("</section>");
-	    
-		sb.append("<div class=\"flex\">");
-		if (previousArticleId != 0) {
-			sb.append("<a href=\"../article/" + previousArticleId + ".html\">이전글</a><br>");
-		}
 
-		if (nextArticleId != 0) {
-			sb.append("<a href=\"../article/" + nextArticleId + ".html\">다음글</a><br>");
-		}
-		sb.append("</div>");
+		sb.append("<section class=\"button\">");
+		sb.append("<div class=\"flex\">");
 		
+		String previousdisable = "";
+		String nextdisable = "";
+		if (previousArticleId == 0) {
+			previousdisable = " class=\"a-pointer-events-none\"";
+		}
+		if (nextArticleId == 0) {
+			nextdisable = " class=\"a-pointer-events-none\"";
+		}
+		
+		sb.append("<a href=\"../article/" + previousArticleId + ".html\"" + previousdisable + ">이전글</a><br>");
+		sb.append("<a href=\"../article/" + board.code + "-list_" + page + ".html\">목록</a><br>");
+		sb.append("<a href=\"../article/" + nextArticleId + ".html\"" + nextdisable + ">다음글</a><br>");
+		sb.append("</div>");
+		sb.append("</section>");
+
 		sb.append("</div>");
 		sb.append("</main>");
 
