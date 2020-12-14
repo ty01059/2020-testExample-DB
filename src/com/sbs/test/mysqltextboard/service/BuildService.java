@@ -142,7 +142,8 @@ public class BuildService {
 			sb.append("<ul class=\"flex flex-jc-c\">");
 			sb.append("<li><a href=\"#\" class=\"flex flex-ai-c\"> &lt; 이전</a></li>");
 			for (int j = 1; j <= paging; j++) {
-				sb.append("<li><a href=\"../article/" + board.code + "-list_" + j + ".html\" class=\"flex flex-ai-c article-page-menu__link--selected\">" + j + " </a></li>");
+				String page = "page-" + i;
+				sb.append("<li><a href=\"../article/" + board.code + "-list_" + j + ".html\" class=\"flex flex-ai-c\">" + j + " </a></li>");
 			}
 			sb.append("<li><a href=\"#\" class=\"flex flex-ai-c\">다음 &gt;</a></li>");
 			sb.append("</ul>");
@@ -203,11 +204,11 @@ public class BuildService {
 		sb.append("<section class=\"article_detail\">");
 		
 	    sb.append("<div class=\"title\">");
-	    sb.append("<div>[" + board.name + " 게시판]</div>");
+	    sb.append("<div>[" + board.name + "]</div>");
 	    sb.append("<div>" + article.title + "</div>");
 	    sb.append("</div>");
 	    sb.append("<div class=\"writer\">");
-	    sb.append("<div>" + article.writer + "</div>");
+	    sb.append("<div><i class=\"fas fa-user-edit\"></i>&nbsp;" + article.writer + "</div>");
 	    sb.append("<div>" + article.regDate + "</div>");
 	    sb.append("<div><i class=\"fas fa-eye\"></i>&nbsp;" + article.view + "</div>");
 	    sb.append("</div>");

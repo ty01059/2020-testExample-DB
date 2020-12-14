@@ -249,6 +249,7 @@ a {
 /* 게시물 리스트 page 시작 */
 .article-page-menu {
   margin-top:20px;
+  color: black;
 }
 
 .article-page-menu > ul > li > a {
@@ -267,30 +268,22 @@ a {
   border-color:#afafaf;
 }
 
+.page-selected {
+  color:red;
+}
 /* 게시물 리스트 page 끝 */
 
 /* 게시물 리스트 끝 */
 
 /* 게시물 상세 시작 */
-/* 노말라이즈 */
-body, ul, li, h1, h2, h3 {
-  margin:0;
-  padding:0;
-  list-style:none;
-}
-a {
-  color:inherit;
-  text-decoration:none;
-}
-
 .article_detail {
   display: flex;
   flex-direction:column;
 }
 
 .article_detail > * {
- padding-bottom:20px;
- padding-top:20px;
+ padding-bottom:10px;
+ padding-top:10px;
 }
 
 .writer {
@@ -327,6 +320,6 @@ a {
 }
 
 .button a:hover {
-	color:blue;
+	color:black;
 }
 /* 게시물 상세 끝 */
