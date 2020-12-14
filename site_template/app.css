@@ -272,57 +272,50 @@ a {
 /* 게시물 리스트 끝 */
 
 /* 게시물 상세 시작 */
+/* 노말라이즈 */
+body, ul, li, h1, h2, h3 {
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+a {
+  color:inherit;
+  text-decoration:none;
+}
+
 .article_detail {
-	display: flex;
-	flex-direction: column;
-	border: 1px solid black;
+  display: flex;
+  flex-direction:column;
 }
 
-.article_detail > .title_writer {
-  height:50px;
+.article_detail > * {
+ padding-bottom:20px;
+ padding-top:20px;
 }
 
-.article_detail > .date_view {
-  height:50px;
-}
-
-.article_detail > .foot {
-  height:50px;
-  border-top: 1px solid black;
-}
-
-.article_detail > .body {
-  flex-grow: 1;
-  min-height: 305px;
-  padding: 20px;
-}
-
-.title_writer, .date_view {
+.writer {
   display:flex;
-  justify-content:space-around;
   flex-direction:row;
+  background-color:#d2d2d2;
+  height: 30px;
+  align-items:center;
 }
 
 .article_detail > div > div {
   display:flex;
-  width:100%;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.article_detail > div {
   border-bottom: 1px solid black;
 }
 
-.article_detail > div > div > div {
-  width:50%;
+.title {
   display:flex;
-  justify-content:center;
   align-items:center;
-}
-
-.article_detail > div > div > div:last-child {
-  border-left: 1px solid black;
-  border-right: 1px solid black;
-}
-
-.article_detail > div > div:last-child > div:last-child {
-  border-right: 0px;
+  background-color:#d2d2d2;
+  height: 30px;
 }
 
 .button a {

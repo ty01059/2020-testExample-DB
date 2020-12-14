@@ -201,36 +201,17 @@ public class BuildService {
 		sb.append("<div class=\"con con-min-width\">");
 
 		sb.append("<section class=\"article_detail\">");
-		sb.append("<div class=\"title_writer\">");
-		sb.append("<div class=\"title\">");
-		sb.append("<div>제목</div>");
-		sb.append("<div>" + article.title + "</div>");
-		sb.append("</div>");
-		sb.append("<div class=\"writer\">");
-		sb.append("<div>작성자</div>");
-		sb.append("<div>" + article.writer + "</div>");
-		sb.append("</div>");
-		sb.append("<div class=\"id\">");
-		sb.append("<div>번호</div>");
-		sb.append("<div>" + article.id + "</div>");
-		sb.append("</div>");
-		sb.append("</div>");
-		sb.append("<div class=\"date_view\">");
-		sb.append("<div class=\"regDate\">");
-		sb.append("<div>등록시간</div>");
-		sb.append("<div>" + article.regDate + "</div>");
-		sb.append("</div>");
-		sb.append("<div class=\"udpateDate\">");
-		sb.append("<div>수정시간</div>");
-		sb.append("<div>" + article.updateDate + "</div>");
-		sb.append("</div>");
-		sb.append("<div class=\"view\">");
-		sb.append("<div>조회수 &nbsp; <i class=\"fas fa-eye\"></i></div>");
-		sb.append("<div>" + article.view + "</div>");
-		sb.append("</div>");
-		sb.append("</div>");
-		sb.append("<div class=\"body\">" + article.body + "</div>");
-		sb.append("<div class=\"foot\">" + board.name + " 게시판 게시물</div>");
+		
+	    sb.append("<div class=\"title\">");
+	    sb.append("<div>[" + board.name + " 게시판]</div>");
+	    sb.append("<div>" + article.title + "</div>");
+	    sb.append("</div>");
+	    sb.append("<div class=\"writer\">");
+	    sb.append("<div>" + article.writer + "</div>");
+	    sb.append("<div>" + article.regDate + "</div>");
+	    sb.append("<div><i class=\"fas fa-eye\"></i>&nbsp;" + article.view + "</div>");
+	    sb.append("</div>");
+	    sb.append("<div class=\"body\">" + article.body + "</div>");
 		sb.append("</section>");
 
 		sb.append("<section class=\"button\">");
