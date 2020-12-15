@@ -13,6 +13,10 @@ public class ArticleService {
 
 	public ArticleService() {
 		articleDao = Container.articleDao;
+		
+//		for(int i = 0; i < 110; i++) {
+//			add("제목" + i, "body" + i, 2, 1);
+//		}
 	}
 
 	// ############ 게시판 #################

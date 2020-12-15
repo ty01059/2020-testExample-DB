@@ -16,6 +16,9 @@ public class App {
 	private Scanner sc;
 
 	public App() {
+//		MysqlUtil.setDBInfo("localhost", "sbsst", "sbs123", "a1");
+//		MysqlUtil.setDevMode(true);
+		
 		articleController = Container.articleController;
 		memberController = Container.memberController;
 		buildController = Container.buildController;

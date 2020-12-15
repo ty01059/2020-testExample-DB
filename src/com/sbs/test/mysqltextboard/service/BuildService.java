@@ -83,12 +83,11 @@ public class BuildService {
 
 		List<Article> articles = articleService.getArticles(board.id);
 		String head = getHeadHtml("board");
-		int boardListLength = 10;
+		int itemsInAPage = 10;
+		int articleCount = articles.size();
+		int totalPage = (int) Math.ceil((double) articleCount / itemsInAPage);
 
-		// 1 10 15
-		// 1 1 2
-		int paging = Double.valueOf(articles.size()) / 10 > 1 ? articles.size() / 10 + 1 : 1;
-		for (int i = 1; i <= paging; i++) {
+		for (int i = 1; i <= totalPage; i++) {
 			StringBuilder sb = new StringBuilder();
 
 			sb.append(head);
@@ -120,8 +119,13 @@ public class BuildService {
 
 			sb.append("<main>");
 
-			int startList = (i - 1) * boardListLength;
-			for (int j = startList; j < startList + boardListLength; j++) {
+			int startList = (i - 1) * itemsInAPage;
+			int end = startList + itemsInAPage - 1;
+			if (end >= articleCount) {
+				end = startList - 1;
+			}
+
+			for (int j = startList; j <= end; j++) {
 				if (j > articles.size() - 1) {
 					break;
 				}
@@ -138,17 +142,62 @@ public class BuildService {
 			}
 
 			// page
+			if (i < 1) {
+				i = 1;
+			}
+
+			if (i > totalPage) {
+				i = totalPage;
+			}
+
+			// 현재 페이지 시작, 끝 박스
+			int maxPageCount = 10;
+			int prevPageBoxCount = (i - 1) / maxPageCount;
+			int pageBoxStartPage = maxPageCount * prevPageBoxCount + 1;
+			int pageBoxEndPage = pageBoxStartPage + maxPageCount - 1;
+
+			if (pageBoxEndPage > totalPage) {
+				pageBoxEndPage = totalPage;
+			}
+
+			// 이전버튼 페이지 계산
+			int pageBoxStartBeforePage = pageBoxStartPage - 1;
+			if (pageBoxStartBeforePage < 1) {
+				pageBoxStartBeforePage = 1;
+			}
+
+			// 다음버튼 페이지 계산
+			int pageBoxEndAfterPage = pageBoxEndPage + 1;
+
+			if (pageBoxEndAfterPage > totalPage) {
+				pageBoxEndAfterPage = totalPage;
+			}
+
+			// 이전버튼 노출여부 계산
+			boolean pageBoxStartBeforeBtnNeedToShow = pageBoxStartBeforePage != pageBoxStartPage;
+			// 다음버튼 노출여부 계산
+			boolean pageBoxEndAfterBtnNeedToShow = pageBoxEndAfterPage != pageBoxEndPage;
+
 			sb.append("<div class=\"article-page-menu\">");
 			sb.append("<ul class=\"flex flex-jc-c\">");
-			sb.append("<li><a href=\"#\" class=\"flex flex-ai-c\"> &lt; 이전</a></li>");
-			for (int j = 1; j <= paging; j++) {
-				String page = "page-" + i;
-				sb.append("<li><a href=\"../article/" + board.code + "-list_" + j + ".html\" class=\"flex flex-ai-c\">" + j + " </a></li>");
+			if (pageBoxStartBeforeBtnNeedToShow) {
+				sb.append("<li><a href=\"../article/" + board.code + "-list_" + pageBoxStartBeforePage + ".html\" class=\"flex flex-ai-c\"> &lt; 이전</a></li>");
 			}
-			sb.append("<li><a href=\"#\" class=\"flex flex-ai-c\">다음 &gt;</a></li>");
+			for (int j = pageBoxStartPage; j <= pageBoxEndPage; j++) {
+				String selectedClass = "";
+				if (j == i) {
+					selectedClass = "article-page-menu__link--selected";
+				}
+
+				sb.append("<li><a href=\"../article/" + board.code + "-list_" + j + ".html\" class=\"flex flex-ai-c "
+						+ selectedClass + "\">" + j + " </a></li>");
+			}
+			if (pageBoxEndAfterBtnNeedToShow) {
+				sb.append("<li><a href=\"../article/" + board.code + "-list_" + pageBoxEndAfterPage + ".html\" class=\"flex flex-ai-c\">다음 &gt;</a></li>");
+			}
 			sb.append("</ul>");
 			sb.append("</div>");
-			
+
 			sb.append("</div>");
 			sb.append("</section>");
 			sb.append("</div>");
@@ -202,22 +251,22 @@ public class BuildService {
 		sb.append("<div class=\"con con-min-width\">");
 
 		sb.append("<section class=\"article_detail\">");
-		
-	    sb.append("<div class=\"title\">");
-	    sb.append("<div>[" + board.name + "]</div>");
-	    sb.append("<div>" + article.title + "</div>");
-	    sb.append("</div>");
-	    sb.append("<div class=\"writer\">");
-	    sb.append("<div><i class=\"fas fa-user-edit\"></i>&nbsp;" + article.writer + "</div>");
-	    sb.append("<div>" + article.regDate + "</div>");
-	    sb.append("<div><i class=\"fas fa-eye\"></i>&nbsp;" + article.view + "</div>");
-	    sb.append("</div>");
-	    sb.append("<div class=\"body\">" + article.body + "</div>");
+
+		sb.append("<div class=\"title\">");
+		sb.append("<div>[" + board.name + "]</div>");
+		sb.append("<div>" + article.title + "</div>");
+		sb.append("</div>");
+		sb.append("<div class=\"writer\">");
+		sb.append("<div><i class=\"fas fa-user-edit\"></i>&nbsp;" + article.writer + "</div>");
+		sb.append("<div>" + article.regDate + "</div>");
+		sb.append("<div><i class=\"fas fa-eye\"></i>&nbsp;" + article.view + "</div>");
+		sb.append("</div>");
+		sb.append("<div class=\"body\">" + article.body + "</div>");
 		sb.append("</section>");
 
 		sb.append("<section class=\"button\">");
 		sb.append("<div class=\"flex\">");
-		
+
 		String previousdisable = "";
 		String nextdisable = "";
 		if (previousArticleId == 0) {
@@ -226,7 +275,7 @@ public class BuildService {
 		if (nextArticleId == 0) {
 			nextdisable = " class=\"a-pointer-events-none\"";
 		}
-		
+
 		sb.append("<a href=\"../article/" + previousArticleId + ".html\"" + previousdisable + ">이전글</a><br>");
 		sb.append("<a href=\"../article/" + board.code + "-list_" + page + ".html\">목록</a><br>");
 		sb.append("<a href=\"../article/" + nextArticleId + ".html\"" + nextdisable + ">다음글</a><br>");

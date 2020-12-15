@@ -78,6 +78,16 @@ public class ArticleController extends Controller {
 			articleDeleteReply(cmd);
 		}
 	}
+	
+	private void articleAdd(String title, String body) {
+		System.out.println("== 게시물 생성 ==");
+
+		int memberId = 2;
+		int boardId = 1;
+
+		int id = articleService.add(title, body, memberId, boardId);
+		System.out.printf("%d번 게시물이 생성되었습니다.\n", id);
+	}
 
 	private void errMsg(String cmd, int i) {
 		if (cmd.split(" ").length != i) {

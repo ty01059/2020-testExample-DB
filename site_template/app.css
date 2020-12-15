@@ -268,7 +268,7 @@ a {
   border-color:#afafaf;
 }
 
-.page-selected {
+.article-page-menu__link--selected {
   color:red;
 }
 /* 게시물 리스트 page 끝 */
