@@ -10,20 +10,18 @@ import com.sbs.test.mysqltextboard.fileUtil.Util;
 public class BuildService {
 
 	private ArticleService articleService;
-//	private MemberService memberService;
 	private boolean buildSiteAuto;
 
 	private String foot = Util.getFileContents("site_template/foot.html");
 
 	public BuildService() {
 		articleService = Container.articleService;
-//		memberService = Container.memberService;
 	}
 
 	public void buildSite() {
 
 		Util.rmdir("site");
-		Util.mkdirs("site/home");
+		Util.mkdirs("site");
 		Util.copy("site_template/app.css", "site/app.css");
 
 		StringBuilder sb = new StringBuilder();
@@ -34,15 +32,12 @@ public class BuildService {
 		sb.append(body);
 		sb.append(foot);
 
-		String filePath = "site/home/index.html";
+		String filePath = "site/index.html";
 
 		Util.writeFile(filePath, sb.toString());
 	}
 
 	private void articleListInBoard(Board board) {
-		System.out.println("site/article 폴더 생성");
-		Util.mkdirs("site/article");
-
 		List<Article> articles = articleService.getArticles(board.id);
 		String head = getHeadHtml("board");
 		int itemsInAPage = 10;
@@ -68,7 +63,7 @@ public class BuildService {
 				articleListAndPage
 						.append("<div class=\"article-list__cell-writer\">" + articles.get(j).writer + "</div>");
 				articleListAndPage.append("<div class=\"article-list__cell-title\">");
-				articleListAndPage.append("<a href=\"../article/" + articles.get(j).id
+				articleListAndPage.append("<a href=\"" + articles.get(j).id
 						+ ".html\" class=\"hover-underline\">" + articles.get(j).title + "</a>");
 				articleListAndPage.append("</div>");
 				articleListAndPage.append("</div>");
@@ -115,7 +110,7 @@ public class BuildService {
 			articleListAndPage.append("<div class=\"article-page-menu\">");
 			articleListAndPage.append("<ul class=\"flex flex-jc-c\">");
 			if (pageBoxStartBeforeBtnNeedToShow) {
-				articleListAndPage.append("<li><a href=\"../article/" + board.code + "-list_" + pageBoxStartBeforePage
+				articleListAndPage.append("<li><a href=\"" + board.code + "-list_" + pageBoxStartBeforePage
 						+ ".html\" class=\"flex flex-ai-c\"> &lt; 이전</a></li>");
 			}
 			for (int j = pageBoxStartPage; j <= pageBoxEndPage; j++) {
@@ -124,11 +119,11 @@ public class BuildService {
 					selectedClass = "article-page-menu__link--selected";
 				}
 
-				articleListAndPage.append("<li><a href=\"../article/" + board.code + "-list_" + j
+				articleListAndPage.append("<li><a href=\"" + board.code + "-list_" + j
 						+ ".html\" class=\"flex flex-ai-c " + selectedClass + "\">" + j + " </a></li>");
 			}
 			if (pageBoxEndAfterBtnNeedToShow) {
-				articleListAndPage.append("<li><a href=\"../article/" + board.code + "-list_" + pageBoxEndAfterPage
+				articleListAndPage.append("<li><a href=\"" + board.code + "-list_" + pageBoxEndAfterPage
 						+ ".html\" class=\"flex flex-ai-c\">다음 &gt;</a></li>");
 			}
 			body = body.replace("${article_list_content-page}", articleListAndPage);
@@ -138,7 +133,7 @@ public class BuildService {
 			sb.append(body);
 			sb.append(foot);
 
-			String filePath = "site/article/" + board.code + "-list_" + i + ".html";
+			String filePath = "site/" + board.code + "-list_" + i + ".html";
 
 			Util.writeFile(filePath, sb.toString());
 		}
@@ -192,9 +187,9 @@ public class BuildService {
 		}
 
 		articleDetail
-				.append("<a href=\"../article/" + previousArticleId + ".html\"" + previousdisable + ">이전글</a><br>");
-		articleDetail.append("<a href=\"../article/" + board.code + "-list_" + page + ".html\">목록</a><br>");
-		articleDetail.append("<a href=\"../article/" + nextArticleId + ".html\"" + nextdisable + ">다음글</a><br>");
+				.append("<a href=\"" + previousArticleId + ".html\"" + previousdisable + ">이전글</a><br>");
+		articleDetail.append("<a href=\"" + board.code + "-list_" + page + ".html\">목록</a><br>");
+		articleDetail.append("<a href=\"" + nextArticleId + ".html\"" + nextdisable + ">다음글</a><br>");
 		articleDetail.append("</div>");
 		articleDetail.append("</section>");
 
@@ -206,7 +201,7 @@ public class BuildService {
 
 		String fileName = article.id + ".html";
 
-		String filePath = "site/article/" + fileName;
+		String filePath = "site/" + fileName;
 
 		Util.writeFile(filePath, sb.toString());
 
@@ -220,7 +215,7 @@ public class BuildService {
 
 		for (Board board : boards) {
 			boardList.append("<li>");
-			boardList.append("<a href=\"../article/" + board.code + "-list_1.html\" class=\"block\">");
+			boardList.append("<a href=\"" + board.code + "-list_1.html\" class=\"block\">");
 			if (board.code.equals("free")) {
 				boardList.append("<i class=\"fab fa-free-code-camp\"></i>");
 			} else if (board.code.equals("notice")) {
