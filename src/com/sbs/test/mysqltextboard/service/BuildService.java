@@ -28,53 +28,15 @@ public class BuildService {
 
 		StringBuilder sb = new StringBuilder();
 		String head = getHeadHtml("home");
+		String body = Util.getFileContents("site_template/home_body.html");
 
 		sb.append(head);
-
-		sb.append("<main class=\"flex-grow-1\">");
-		sb.append("<section class=\"title-bar con-min-width\">");
-		sb.append("<h1 class=\"con\">");
-		sb.append("<i class=\"fas fa-home\"></i> <span>HOME</span>");
-		sb.append("</h1>");
-		sb.append("</section>");
-		sb.append("<section class=\"section-1 con-min-width\">");
-		sb.append(
-				"<div class=\"con\">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, esse ullam nulla id unde ex "
-						+ "dicta sequi, repellat temporibus quis amet ipsa provident magni veniam explicabo, repudiandae fuga in. In.</div>");
-		sb.append("</section>");
-		sb.append("</main>");
-
+		sb.append(body);
 		sb.append(foot);
 
 		String filePath = "site/home/index.html";
 
 		Util.writeFile(filePath, sb.toString());
-	}
-
-	private String getHeadHtml(String keyword) {
-		String head = Util.getFileContents("site_template/head.html");
-		List<Board> boards = articleService.getBoards();
-		StringBuilder boardList = new StringBuilder();
-
-		for (Board board : boards) {
-			boardList.append("<li>");
-			boardList.append("<a href=\"../article/" + board.code + "-list_1.html\" class=\"block\">");
-			if (board.code.equals("free")) {
-				boardList.append("<i class=\"fab fa-free-code-camp\"></i>");
-			} else if (board.code.equals("notice")) {
-				boardList.append("<i class=\"fas fa-flag\"></i>");
-			}
-			boardList.append("<span>" + board.code.toUpperCase() + "</span>");
-			boardList.append("</a>");
-			boardList.append("</li>");
-
-			if (keyword.equals("home")) {
-				articleListInBoard(board);
-			}
-		}
-
-		head = head.replace("${menu-bar__menu-1__board-menu-content}", boardList);
-		return head;
 	}
 
 	private void articleListInBoard(Board board) {
@@ -89,55 +51,25 @@ public class BuildService {
 
 		for (int i = 1; i <= totalPage; i++) {
 			StringBuilder sb = new StringBuilder();
-
-			sb.append(head);
-			sb.append("<main class=\"flex-grow-1\">");
-			sb.append("<div class=\"flex flex-column\">");
-
-			sb.append("<section class=\"title-bar con-min-width\">");
-			sb.append("<h1 class=\"con\">");
-			sb.append("<div class=\"title-bar con-min-width\">");
-			sb.append("<h1 class=\"con\">");
-			sb.append("<i class=\"fas fa-flag\"></i>");
-			sb.append("<span>" + board.code.toUpperCase() + " LIST</span>");
-			sb.append("</h1>");
-			sb.append("</div>");
-			sb.append("</h1>");
-			sb.append("</section>");
-
-			sb.append("<section class=\"section-1 con-min-width\">");
-			sb.append("<div class=\"con\">");
-			sb.append("<div class=\"article-list\">");
-			sb.append("<header>");
-			sb.append("<div class=\"flex\">");
-			sb.append("<div class=\"article-list__cell-id\">번호</div>");
-			sb.append("<div class=\"article-list__cell-reg-date\">날짜</div>");
-			sb.append("<div class=\"article-list__cell-writer\">작성자</div>");
-			sb.append("<div class=\"article-list__cell-title\">제목</div>");
-			sb.append("</div>");
-			sb.append("</header>");
-
-			sb.append("<main>");
+			StringBuilder articleListAndPage = new StringBuilder();
+			String body = Util.getFileContents("site_template/article_list_body.html");
 
 			int startList = (i - 1) * itemsInAPage;
 			int end = startList + itemsInAPage - 1;
 			if (end >= articleCount) {
-				end = startList - 1;
+				end = articleCount - 1;
 			}
 
 			for (int j = startList; j <= end; j++) {
-				if (j > articles.size() - 1) {
-					break;
-				}
-				sb.append("<div class=\"flex\">");
-				sb.append("<div class=\"article-list__cell-id\">" + articles.get(j).id + "</div>");
-				sb.append("<div class=\"article-list__cell-reg-date\">" + articles.get(j).regDate + "</div>");
-				sb.append("<div class=\"article-list__cell-writer\">" + articles.get(j).writer + "</div>");
-				sb.append("<div class=\"article-list__cell-title\">");
-				sb.append("<a href=\"../article/" + articles.get(j).id + ".html\" class=\"hover-underline\">"
+				articleListAndPage.append("<div class=\"flex\">");
+				articleListAndPage.append("<div class=\"article-list__cell-id\">" + articles.get(j).id + "</div>");
+				articleListAndPage.append("<div class=\"article-list__cell-reg-date\">" + articles.get(j).regDate + "</div>");
+				articleListAndPage.append("<div class=\"article-list__cell-writer\">" + articles.get(j).writer + "</div>");
+				articleListAndPage.append("<div class=\"article-list__cell-title\">");
+				articleListAndPage.append("<a href=\"../article/" + articles.get(j).id + ".html\" class=\"hover-underline\">"
 						+ articles.get(j).title + "</a>");
-				sb.append("</div>");
-				sb.append("</div>");
+				articleListAndPage.append("</div>");
+				articleListAndPage.append("</div>");
 				articleDetailSite(articles.get(j), articles, i);
 			}
 
@@ -178,10 +110,11 @@ public class BuildService {
 			// 다음버튼 노출여부 계산
 			boolean pageBoxEndAfterBtnNeedToShow = pageBoxEndAfterPage != pageBoxEndPage;
 
-			sb.append("<div class=\"article-page-menu\">");
-			sb.append("<ul class=\"flex flex-jc-c\">");
+			articleListAndPage.append("<div class=\"article-page-menu\">");
+			articleListAndPage.append("<ul class=\"flex flex-jc-c\">");
 			if (pageBoxStartBeforeBtnNeedToShow) {
-				sb.append("<li><a href=\"../article/" + board.code + "-list_" + pageBoxStartBeforePage + ".html\" class=\"flex flex-ai-c\"> &lt; 이전</a></li>");
+				articleListAndPage.append("<li><a href=\"../article/" + board.code + "-list_" + pageBoxStartBeforePage
+						+ ".html\" class=\"flex flex-ai-c\"> &lt; 이전</a></li>");
 			}
 			for (int j = pageBoxStartPage; j <= pageBoxEndPage; j++) {
 				String selectedClass = "";
@@ -189,20 +122,18 @@ public class BuildService {
 					selectedClass = "article-page-menu__link--selected";
 				}
 
-				sb.append("<li><a href=\"../article/" + board.code + "-list_" + j + ".html\" class=\"flex flex-ai-c "
+				articleListAndPage.append("<li><a href=\"../article/" + board.code + "-list_" + j + ".html\" class=\"flex flex-ai-c "
 						+ selectedClass + "\">" + j + " </a></li>");
 			}
 			if (pageBoxEndAfterBtnNeedToShow) {
-				sb.append("<li><a href=\"../article/" + board.code + "-list_" + pageBoxEndAfterPage + ".html\" class=\"flex flex-ai-c\">다음 &gt;</a></li>");
+				articleListAndPage.append("<li><a href=\"../article/" + board.code + "-list_" + pageBoxEndAfterPage
+						+ ".html\" class=\"flex flex-ai-c\">다음 &gt;</a></li>");
 			}
-			sb.append("</ul>");
-			sb.append("</div>");
-
-			sb.append("</div>");
-			sb.append("</section>");
-			sb.append("</div>");
-			sb.append("</main>");
-
+			body = body.replace("${article_list_content-page}", articleListAndPage);
+			body = body.replace("${board_code}", board.code.toUpperCase());
+			
+			sb.append(head);
+			sb.append(body);
 			sb.append(foot);
 
 			String filePath = "site/article/" + board.code + "-list_" + i + ".html";
@@ -230,42 +161,24 @@ public class BuildService {
 		Board board = articleService.getBoard(article.boardId);
 
 		StringBuilder sb = new StringBuilder();
+		StringBuilder articleDetail = new StringBuilder();
 		String head = getHeadHtml("detail");
+		String body = Util.getFileContents("site_template/article_detail_body.html");
 
-		sb.append(head);
+		articleDetail.append("<div class=\"title\">");
+		articleDetail.append("<div>[" + board.name + "]</div>");
+		articleDetail.append("<div>" + article.title + "</div>");
+		articleDetail.append("</div>");
+		articleDetail.append("<div class=\"writer\">");
+		articleDetail.append("<div><i class=\"fas fa-user-edit\"></i>&nbsp;" + article.writer + "</div>");
+		articleDetail.append("<div>" + article.regDate + "</div>");
+		articleDetail.append("<div><i class=\"fas fa-eye\"></i>&nbsp;" + article.view + "</div>");
+		articleDetail.append("</div>");
+		articleDetail.append("<div class=\"body\">" + article.body + "</div>");
+		articleDetail.append("</section>");
 
-		sb.append("<main class=\"flex-grow-1\">");
-		sb.append("<div class=\"flex flex-column\">");
-
-		sb.append("<section class=\"title-bar con-min-width\">");
-		sb.append("<h1 class=\"con\">");
-		sb.append("<div class=\"title-bar con-min-width\">");
-		sb.append("<h1 class=\"con\">");
-		sb.append("<i class=\"fas fa-clipboard-list\"></i>");
-		sb.append("<span>게시물 상세페이지</span>");
-		sb.append("</h1>");
-		sb.append("</div>");
-		sb.append("</h1>");
-		sb.append("</section>");
-
-		sb.append("<div class=\"con con-min-width\">");
-
-		sb.append("<section class=\"article_detail\">");
-
-		sb.append("<div class=\"title\">");
-		sb.append("<div>[" + board.name + "]</div>");
-		sb.append("<div>" + article.title + "</div>");
-		sb.append("</div>");
-		sb.append("<div class=\"writer\">");
-		sb.append("<div><i class=\"fas fa-user-edit\"></i>&nbsp;" + article.writer + "</div>");
-		sb.append("<div>" + article.regDate + "</div>");
-		sb.append("<div><i class=\"fas fa-eye\"></i>&nbsp;" + article.view + "</div>");
-		sb.append("</div>");
-		sb.append("<div class=\"body\">" + article.body + "</div>");
-		sb.append("</section>");
-
-		sb.append("<section class=\"button\">");
-		sb.append("<div class=\"flex\">");
+		articleDetail.append("<section class=\"button\">");
+		articleDetail.append("<div class=\"flex\">");
 
 		String previousdisable = "";
 		String nextdisable = "";
@@ -276,15 +189,16 @@ public class BuildService {
 			nextdisable = " class=\"a-pointer-events-none\"";
 		}
 
-		sb.append("<a href=\"../article/" + previousArticleId + ".html\"" + previousdisable + ">이전글</a><br>");
-		sb.append("<a href=\"../article/" + board.code + "-list_" + page + ".html\">목록</a><br>");
-		sb.append("<a href=\"../article/" + nextArticleId + ".html\"" + nextdisable + ">다음글</a><br>");
-		sb.append("</div>");
-		sb.append("</section>");
+		articleDetail.append("<a href=\"../article/" + previousArticleId + ".html\"" + previousdisable + ">이전글</a><br>");
+		articleDetail.append("<a href=\"../article/" + board.code + "-list_" + page + ".html\">목록</a><br>");
+		articleDetail.append("<a href=\"../article/" + nextArticleId + ".html\"" + nextdisable + ">다음글</a><br>");
+		articleDetail.append("</div>");
+		articleDetail.append("</section>");
 
-		sb.append("</div>");
-		sb.append("</main>");
-
+		body = body.replace("${article_detail_info}", articleDetail);
+		
+		sb.append(head);
+		sb.append(body);
 		sb.append(foot);
 
 		String fileName = article.id + ".html";
@@ -294,6 +208,32 @@ public class BuildService {
 		Util.writeFile(filePath, sb.toString());
 
 		System.out.println(filePath + " 생성");
+	}
+
+	private String getHeadHtml(String keyword) {
+		String head = Util.getFileContents("site_template/head.html");
+		List<Board> boards = articleService.getBoards();
+		StringBuilder boardList = new StringBuilder();
+
+		for (Board board : boards) {
+			boardList.append("<li>");
+			boardList.append("<a href=\"../article/" + board.code + "-list_1.html\" class=\"block\">");
+			if (board.code.equals("free")) {
+				boardList.append("<i class=\"fab fa-free-code-camp\"></i>");
+			} else if (board.code.equals("notice")) {
+				boardList.append("<i class=\"fas fa-flag\"></i>");
+			}
+			boardList.append("<span>" + board.code.toUpperCase() + "</span>");
+			boardList.append("</a>");
+			boardList.append("</li>");
+
+			if (keyword.equals("home")) {
+				articleListInBoard(board);
+			}
+		}
+
+		head = head.replace("${menu-bar__menu-1__board-menu-content}", boardList);
+		return head;
 	}
 
 	// 별도의 쓰레드를 켜서 build site 명령을 10초에 한번씩 수행한다. 즉 자동빌드켜기
