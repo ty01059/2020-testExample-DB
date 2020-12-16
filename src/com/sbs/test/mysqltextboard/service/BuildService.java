@@ -63,11 +63,13 @@ public class BuildService {
 			for (int j = startList; j <= end; j++) {
 				articleListAndPage.append("<div class=\"flex\">");
 				articleListAndPage.append("<div class=\"article-list__cell-id\">" + articles.get(j).id + "</div>");
-				articleListAndPage.append("<div class=\"article-list__cell-reg-date\">" + articles.get(j).regDate + "</div>");
-				articleListAndPage.append("<div class=\"article-list__cell-writer\">" + articles.get(j).writer + "</div>");
+				articleListAndPage
+						.append("<div class=\"article-list__cell-reg-date\">" + articles.get(j).regDate + "</div>");
+				articleListAndPage
+						.append("<div class=\"article-list__cell-writer\">" + articles.get(j).writer + "</div>");
 				articleListAndPage.append("<div class=\"article-list__cell-title\">");
-				articleListAndPage.append("<a href=\"../article/" + articles.get(j).id + ".html\" class=\"hover-underline\">"
-						+ articles.get(j).title + "</a>");
+				articleListAndPage.append("<a href=\"../article/" + articles.get(j).id
+						+ ".html\" class=\"hover-underline\">" + articles.get(j).title + "</a>");
 				articleListAndPage.append("</div>");
 				articleListAndPage.append("</div>");
 				articleDetailSite(articles.get(j), articles, i);
@@ -122,8 +124,8 @@ public class BuildService {
 					selectedClass = "article-page-menu__link--selected";
 				}
 
-				articleListAndPage.append("<li><a href=\"../article/" + board.code + "-list_" + j + ".html\" class=\"flex flex-ai-c "
-						+ selectedClass + "\">" + j + " </a></li>");
+				articleListAndPage.append("<li><a href=\"../article/" + board.code + "-list_" + j
+						+ ".html\" class=\"flex flex-ai-c " + selectedClass + "\">" + j + " </a></li>");
 			}
 			if (pageBoxEndAfterBtnNeedToShow) {
 				articleListAndPage.append("<li><a href=\"../article/" + board.code + "-list_" + pageBoxEndAfterPage
@@ -131,7 +133,7 @@ public class BuildService {
 			}
 			body = body.replace("${article_list_content-page}", articleListAndPage);
 			body = body.replace("${board_code}", board.code.toUpperCase());
-			
+
 			sb.append(head);
 			sb.append(body);
 			sb.append(foot);
@@ -189,14 +191,15 @@ public class BuildService {
 			nextdisable = " class=\"a-pointer-events-none\"";
 		}
 
-		articleDetail.append("<a href=\"../article/" + previousArticleId + ".html\"" + previousdisable + ">이전글</a><br>");
+		articleDetail
+				.append("<a href=\"../article/" + previousArticleId + ".html\"" + previousdisable + ">이전글</a><br>");
 		articleDetail.append("<a href=\"../article/" + board.code + "-list_" + page + ".html\">목록</a><br>");
 		articleDetail.append("<a href=\"../article/" + nextArticleId + ".html\"" + nextdisable + ">다음글</a><br>");
 		articleDetail.append("</div>");
 		articleDetail.append("</section>");
 
 		body = body.replace("${article_detail_info}", articleDetail);
-		
+
 		sb.append(head);
 		sb.append(body);
 		sb.append(foot);
